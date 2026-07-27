@@ -8,13 +8,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "YOUR_NAME — AI Builder",
-  description: "探索 RAG、知识图谱与智能系统的个人作品集。",
+  metadataBase: new URL("https://jimzhou03-pixel-lab.weijiezhou03.chatgpt.site"),
+  title: "Jim Zhou — Computational Linguistics & NLP",
+  description:
+    "A growing portfolio exploring computational linguistics, NLP, retrieval-augmented generation, and knowledge graphs.",
+  openGraph: {
+    title: "Jim Zhou — Computational Linguistics & NLP",
+    description:
+      "Language, knowledge, and intelligence — projects and notes by Jim Zhou.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Jim Zhou — Computational Linguistics & NLP",
+    description:
+      "Language, knowledge, and intelligence — projects and notes by Jim Zhou.",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="zh-CN">
+    <html lang="en">
       <body className={geistMono.variable}>{children}</body>
     </html>
   );
