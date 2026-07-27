@@ -1,311 +1,161 @@
-import ParticleField from "./ParticleField";
-
-const focusAreas = [
-  ["01", "LANGUAGE"],
-  ["02", "RETRIEVAL"],
-  ["03", "KNOWLEDGE"],
-  ["04", "REASONING"],
-];
-
-const currentTracks = [
-  {
-    index: "01",
-    title: "MSc Computational Linguistics",
-    detail: "Preparing for a new academic chapter in Germany.",
-  },
-  {
-    index: "02",
-    title: "RAG × Knowledge Graphs",
-    detail: "Turning one project into a clear, evidence-based case study.",
-  },
-  {
-    index: "03",
-    title: "Multilingual NLP Foundations",
-    detail: "Building the theory and engineering skills for future research.",
-  },
-];
-
-const notes = [
-  {
-    code: "NOTE_01",
-    title: "Evaluating a course QA system",
-    status: "PLANNED",
-  },
-  {
-    code: "NOTE_02",
-    title: "What graphs add beyond vector search",
-    status: "PLANNED",
-  },
-  {
-    code: "LOG_01",
-    title: "Computational Linguistics learning log",
-    status: "SOON",
-  },
-];
+import SiteFrame from "./components/SiteFrame";
+import { featuredProject, notes, siteConfig, timeline } from "./siteConfig";
 
 export default function Home() {
   return (
-    <main>
-      <ParticleField />
-      <div className="ambient-glow glow-violet" aria-hidden="true" />
-      <div className="ambient-glow glow-cyan" aria-hidden="true" />
-
-      <header className="site-header wrap">
-        <a className="brand" href="#top" aria-label="Back to the top">
-          <span className="brand-mark" aria-hidden="true">◆</span>
-          <span>JIMZHOU03.EXE</span>
-        </a>
-        <nav aria-label="Primary navigation">
-          <a href="#about">01 / ABOUT</a>
-          <a href="#work">02 / WORK</a>
-          <a href="#now">03 / NOW</a>
-          <a href="#notes">04 / NOTES</a>
-        </nav>
-        <a
-          className="mini-link"
-          href="https://github.com/jimzhou03"
-          target="_blank"
-          rel="noreferrer"
-        >
-          GITHUB ↗
-        </a>
-      </header>
-
-      <section className="hero wrap" id="top">
-        <div className="hero-copy">
-          <div className="eyebrow">
-            <span className="pulse" />
-            MSC JOURNEY · LOADING
+    <SiteFrame active="home">
+      <section className="home-hero">
+        <div className="hero-introduction glass-panel">
+          <div className="hero-status">
+            <span className="status-dot" />
+            OPEN TO LEARNING, RESEARCH &amp; COLLABORATION
           </div>
-          <p className="overline">COMPUTATIONAL LINGUISTICS / NLP SYSTEMS</p>
+          <p className="micro-label">WELCOME TO MY DIGITAL GARDEN</p>
           <h1>
-            <span>LANGUAGE.</span>
-            <span className="outlined">KNOWLEDGE.</span>
-            <span>INTELLIGENCE.</span>
+            Building at the edge of
+            <span>language and knowledge.</span>
           </h1>
-          <p className="hero-intro">
-            Hi, I&apos;m <strong>Jim</strong> — an incoming Computational Linguistics
-            master&apos;s student exploring reliable NLP systems through retrieval,
-            knowledge graphs and language models.
+          <p className="hero-lead">
+            I&apos;m <strong>{siteConfig.name}</strong>, an incoming Computational
+            Linguistics master&apos;s student exploring how retrieval, structured
+            knowledge and language models can work together.
           </p>
-          <div className="hero-actions">
-            <a className="pixel-button primary" href="#work">
-              <span>VIEW SELECTED WORK</span><b aria-hidden="true">→</b>
+          <div className="hero-links">
+            <a className="action-button primary" href="/projects">
+              Explore my work <span>→</span>
             </a>
-            <a
-              className="pixel-button ghost"
-              href="https://github.com/jimzhou03"
-              target="_blank"
-              rel="noreferrer"
-            >
-              GITHUB PROFILE
+            <a className="action-button" href="/about">
+              About this journey
             </a>
+          </div>
+          <div className="hero-keywords" aria-label="Research interests">
+            {siteConfig.interests.map((interest) => (
+              <span key={interest}>{interest}</span>
+            ))}
           </div>
         </div>
 
-        <div className="hero-visual" aria-label="Personal profile status">
-          <div className="orbit orbit-one" aria-hidden="true" />
-          <div className="orbit orbit-two" aria-hidden="true" />
-          <div className="pixel-core" aria-hidden="true">
-            <span className="core-a" />
-            <span className="core-b" />
-            <span className="core-c" />
-            <span className="core-d" />
-            <span className="core-center">NLP</span>
-          </div>
-          <div className="floating-note note-one">RAG_</div>
-          <div className="floating-note note-two">KG.sys</div>
-          <div className="floating-note note-three">{"{LLM}"}</div>
-          <div className="scan-panel">
-            <div className="panel-bar"><span /> PROFILE.SYS <b>×</b></div>
-            <div className="panel-body">
-              <p><em>ROLE</em><strong>INCOMING MSc</strong></p>
-              <p><em>FOCUS</em><strong>NLP × KNOWLEDGE</strong></p>
-              <p><em>ROUTE</em><strong>CHINA → GERMANY</strong></p>
-              <p><em>STATUS</em><strong className="lime">LEARNING</strong></p>
+        <aside className="profile-card glass-panel">
+          <div className="profile-visual" aria-hidden="true">
+            <div className="profile-ring ring-one" />
+            <div className="profile-ring ring-two" />
+            <div className="profile-avatar">
+              <span>JZ</span>
+              <i />
             </div>
+            <span className="floating-chip chip-rag">RAG</span>
+            <span className="floating-chip chip-kg">KG</span>
+            <span className="floating-chip chip-nlp">NLP</span>
           </div>
-        </div>
-
-        <div className="scroll-cue" aria-hidden="true">
-          <span>SCROLL TO EXPLORE</span><i />
-        </div>
-      </section>
-
-      <section className="signal-strip" aria-label="Focus areas">
-        <div className="wrap signal-grid">
-          {focusAreas.map(([index, label]) => (
-            <span key={label}><b>{index}</b>{label}</span>
-          ))}
-        </div>
-      </section>
-
-      <section className="about wrap" id="about">
-        <div className="section-index">01</div>
-        <div className="section-heading">
-          <p className="overline">ABOUT / CURRENT CHAPTER</p>
-          <h2>Learning how language,<br />knowledge and computation connect.</h2>
-        </div>
-        <div className="about-copy">
-          <p>
-            I am preparing to begin a master&apos;s degree in Computational
-            Linguistics in Germany. My current interests sit between natural
-            language processing, retrieval-augmented generation, knowledge
-            graphs and practical AI systems.
-          </p>
-          <p>
-            This site is a growing record of what I build, learn and investigate.
-            For now, the goal is simple: document one real project clearly and
-            develop stronger foundations for future research and engineering work.
-          </p>
-          <div className="about-status">
-            <span><i /> FIRST-YEAR MODE</span>
-            <strong>LEARNING &amp; COLLABORATION</strong>
+          <div className="profile-copy">
+            <p className="micro-label">PROFILE / 2026</p>
+            <h2>{siteConfig.name}</h2>
+            <p>{siteConfig.title}</p>
+            <dl>
+              <div><dt>ROUTE</dt><dd>{siteConfig.location}</dd></div>
+              <div><dt>STATUS</dt><dd>{siteConfig.status}</dd></div>
+              <div><dt>MODE</dt><dd className="online">LEARNING</dd></div>
+            </dl>
           </div>
-        </div>
+        </aside>
       </section>
 
-      <section className="project-section" id="work">
-        <div className="wrap">
-          <div className="project-heading-row">
+      <section className="dashboard-grid" aria-label="Portfolio dashboard">
+        <article className="feature-card glass-panel">
+          <div className="card-heading">
             <div>
-              <p className="overline">SELECTED WORK / 2025</p>
-              <h2>ONE PROJECT,<br />DOCUMENTED WITH DEPTH.</h2>
+              <p className="micro-label">{featuredProject.kicker}</p>
+              <h2>{featuredProject.title}</h2>
             </div>
-            <span className="project-counter">01 / 01</span>
+            <span className="card-index">01</span>
           </div>
+          <div className="system-map" aria-label="Project system pipeline">
+            <div className="map-grid" aria-hidden="true" />
+            <div className="map-node docs">DOCS</div>
+            <div className="map-node retrieve">RAG</div>
+            <div className="map-node graph">KG</div>
+            <div className="map-node answer">ANS</div>
+            <span className="map-line line-one" />
+            <span className="map-line line-two" />
+            <span className="map-line line-three" />
+          </div>
+          <p>{featuredProject.description}</p>
+          <div className="tag-row">
+            {featuredProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
+          </div>
+          <div className="card-bottom">
+            <span><i /> {featuredProject.status}</span>
+            <a href={`/projects/${featuredProject.slug}`}>Open case study →</a>
+          </div>
+        </article>
 
-          <article className="project-card">
-            <div className="project-art" aria-label="Knowledge-enhanced assistant pipeline">
-              <div className="art-grid" aria-hidden="true" />
-              <div className="node node-a">DOCS</div>
-              <div className="node node-b">RAG</div>
-              <div className="node node-c">KG</div>
-              <div className="node node-d">ANS</div>
-              <div className="route route-a" aria-hidden="true" />
-              <div className="route route-b" aria-hidden="true" />
-              <div className="route route-c" aria-hidden="true" />
-              <div className="pixel-burst burst-a" aria-hidden="true" />
-              <div className="pixel-burst burst-b" aria-hidden="true" />
-              <span className="art-label">KNOWLEDGE ROUTE / ACTIVE</span>
+        <div className="dashboard-column">
+          <article className="now-card glass-panel">
+            <div className="card-heading compact">
+              <div>
+                <p className="micro-label">NOW / JULY 2026</p>
+                <h2>Preparing the next chapter.</h2>
+              </div>
+              <span className="signal-bars" aria-hidden="true"><i /><i /><i /><i /></span>
             </div>
+            <ul className="now-list">
+              <li><span>01</span><p><b>Computational Linguistics</b>Strengthening linguistic and technical foundations.</p></li>
+              <li><span>02</span><p><b>Project documentation</b>Turning the AI tutor into a clear case study.</p></li>
+              <li><span>03</span><p><b>Germany transition</b>Preparing for the MSc journey in October.</p></li>
+            </ul>
+          </article>
 
-            <div className="project-info">
-              <div className="quest-status"><span /> FEATURED CASE · IN PROGRESS</div>
-              <h3>Knowledge-Enhanced<br />AI Teaching Assistant</h3>
-              <p>
-                A CCL 2025 project exploring how retrieval-augmented generation
-                and knowledge graphs can support more grounded, traceable course
-                question answering.
-              </p>
-              <div className="pipeline" aria-label="System pipeline">
-                <span>COURSE DOCS</span><i>→</i><span>RETRIEVE</span><i>→</i>
-                <span>GRAPH CONTEXT</span><i>→</i><span>ANSWER</span>
-              </div>
-              <div className="project-evidence">
-                <div>
-                  <b>CHALLENGE</b>
-                  <span>Ground answers in course material and related concepts.</span>
-                </div>
-                <div>
-                  <b>APPROACH</b>
-                  <span>Combine semantic retrieval with structured knowledge context.</span>
-                </div>
-                <div>
-                  <b>CASE STUDY</b>
-                  <span>Architecture, examples, evaluation plan and limitations.</span>
-                </div>
-              </div>
-              <ul className="tags" aria-label="Technology tags">
-                <li>RAG</li>
-                <li>Knowledge Graph</li>
-                <li>LLM</li>
-                <li>Course QA</li>
-              </ul>
-              <p className="placeholder-note">
-                Detailed write-up and repository documentation are being prepared.
-              </p>
-            </div>
+          <article className="quote-card glass-panel">
+            <p className="micro-label">FIELD NOTE</p>
+            <blockquote>
+              “Build systems that can explain where an answer comes from.”
+            </blockquote>
+            <span>Current research instinct</span>
           </article>
         </div>
       </section>
 
-      <section className="now-section wrap" id="now">
-        <div className="section-index">03</div>
-        <div className="now-heading">
-          <p className="overline">NOW / ACTIVE THREADS</p>
-          <h2>What I&apos;m building<br />towards.</h2>
+      <section className="split-heading">
+        <div>
+          <p className="micro-label">RECENT / PLANNED WRITING</p>
+          <h2>Notes from the learning process.</h2>
         </div>
-        <div className="track-list">
-          {currentTracks.map((track) => (
-            <article className="track-item" key={track.index}>
-              <span>{track.index}</span>
+        <a href="/notes">View all notes →</a>
+      </section>
+
+      <section className="note-preview-grid">
+        {notes.map((note, index) => (
+          <article className="note-preview glass-panel" key={note.id}>
+            <div>
+              <span>{note.id}</span>
+              <b>0{index + 1}</b>
+            </div>
+            <p>{note.category}</p>
+            <h3>{note.title}</h3>
+            <small>{note.status}</small>
+          </article>
+        ))}
+      </section>
+
+      <section className="journey-card glass-panel">
+        <div className="journey-intro">
+          <p className="micro-label">JOURNEY / SIGNAL PATH</p>
+          <h2>Learning in public, one useful thing at a time.</h2>
+          <a href="/timeline">Full timeline →</a>
+        </div>
+        <div className="journey-track">
+          {timeline.map((item) => (
+            <div className={`journey-stop ${item.state}`} key={item.year}>
+              <span>{item.year}</span>
+              <i />
               <div>
-                <h3>{track.title}</h3>
-                <p>{track.detail}</p>
+                <b>{item.title}</b>
+                <p>{item.description}</p>
               </div>
-              <b aria-hidden="true">↗</b>
-            </article>
+            </div>
           ))}
         </div>
       </section>
-
-      <section className="notes-section" id="notes">
-        <div className="wrap notes-layout">
-          <div className="notes-heading">
-            <p className="overline">LAB NOTES / IDEA QUEUE</p>
-            <h2>Small notes,<br />honest thinking.</h2>
-            <p>
-              Short technical notes will document questions, evaluation ideas
-              and lessons from coursework — without pretending unfinished work
-              is finished.
-            </p>
-          </div>
-          <div className="notes-list">
-            {notes.map((note) => (
-              <div className="note-row" key={note.code}>
-                <code>{note.code}</code>
-                <span>{note.title}</span>
-                <b>{note.status}</b>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="contact wrap" id="contact">
-        <div className="contact-terminal">
-          <div className="terminal-top">
-            <span><i /> <i /> <i /></span>
-            CONTACT_TERMINAL
-            <b>● CONNECTED</b>
-          </div>
-          <div className="terminal-content">
-            <p className="overline">LEARNING IN PUBLIC, ONE USEFUL THING AT A TIME.</p>
-            <h2>FOLLOW THE<br /><span>BUILD LOG.</span></h2>
-            <p className="command">
-              <em>guest@portfolio:~$</em> open github/jimzhou03
-              <span className="cursor">_</span>
-            </p>
-            <a
-              className="pixel-button primary contact-button"
-              href="https://github.com/jimzhou03"
-              target="_blank"
-              rel="noreferrer"
-            >
-              OPEN GITHUB <b>↗</b>
-            </a>
-          </div>
-        </div>
-      </section>
-
-      <footer className="wrap">
-        <p>© 2026 JIM ZHOU · BUILT WITH CURIOSITY + CODE</p>
-        <div>
-          <a href="https://github.com/jimzhou03" target="_blank" rel="noreferrer">GITHUB ↗</a>
-          <a href="#top">BACK TO TOP ↑</a>
-        </div>
-      </footer>
-    </main>
+    </SiteFrame>
   );
 }
