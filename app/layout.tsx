@@ -13,7 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://jimzhou03-pixel-lab.weijiezhou03.chatgpt.site"),
+  metadataBase: new URL("https://jimzhou03.github.io"),
+  alternates: {
+    canonical: "/",
+  },
   title: {
     default: "Jim Zhou — Computational Linguistics & NLP",
     template: "%s · Jim Zhou",
@@ -27,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://jimzhou03-pixel-lab.weijiezhou03.chatgpt.site/og.png",
+        url: "https://jimzhou03.github.io/og.png",
         width: 1536,
         height: 875,
         alt: "Jim Zhou — Computational Linguistics and NLP",
@@ -39,7 +42,7 @@ export const metadata: Metadata = {
     title: "Jim Zhou — Computational Linguistics & NLP",
     description:
       "Projects, notes, and a growing computational linguistics journey by Jim Zhou.",
-    images: ["https://jimzhou03-pixel-lab.weijiezhou03.chatgpt.site/og.png"],
+    images: ["https://jimzhou03.github.io/og.png"],
   },
 };
 
