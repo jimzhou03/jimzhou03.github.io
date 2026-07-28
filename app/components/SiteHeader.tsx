@@ -1,5 +1,3 @@
-import ThemeToggle from "./ThemeToggle";
-
 const items = [
   { id: "home", label: "Home", href: "/" },
   { id: "projects", label: "Projects", href: "/projects" },
@@ -10,13 +8,9 @@ const items = [
 
 export default function SiteHeader({ active }: { active: string }) {
   return (
-    <header className="glass-nav">
+    <header className="site-header">
       <a className="site-logo" href="/" aria-label="Jim Zhou home">
-        <span className="logo-orb" aria-hidden="true">JZ</span>
-        <span>
-          <b>JIM ZHOU</b>
-          <small>LANGUAGE × KNOWLEDGE</small>
-        </span>
+        jimzhou<span>.</span>
       </a>
 
       <nav className="main-nav" aria-label="Primary navigation">
@@ -31,16 +25,16 @@ export default function SiteHeader({ active }: { active: string }) {
         ))}
       </nav>
 
-      <div className="nav-actions">
+      <div className="site-header-bottom">
+        <p>language ×<br />knowledge</p>
         <a
           className="github-button"
           href="https://github.com/jimzhou03"
           target="_blank"
           rel="noreferrer"
         >
-          GitHub <span aria-hidden="true">↗</span>
+          github ↗
         </a>
-        <ThemeToggle />
       </div>
     </header>
   );

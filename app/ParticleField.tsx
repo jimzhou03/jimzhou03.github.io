@@ -30,9 +30,9 @@ export default function ParticleField() {
     let particles: Particle[] = [];
 
     const palette = [
-      "rgba(49, 230, 220, 0.78)",
-      "rgba(168, 92, 255, 0.72)",
-      "rgba(255, 214, 107, 0.70)",
+      "rgba(25, 26, 22, 0.18)",
+      "rgba(119, 162, 62, 0.28)",
+      "rgba(25, 26, 22, 0.10)",
     ];
 
     const createParticles = () => {
@@ -94,7 +94,7 @@ export default function ParticleField() {
 
           if (distance < 112) {
             context.beginPath();
-            context.strokeStyle = `rgba(126, 112, 255, ${(1 - distance / 112) * 0.17})`;
+            context.strokeStyle = `rgba(25, 26, 22, ${(1 - distance / 112) * 0.07})`;
             context.lineWidth = 0.75;
             context.moveTo(particle.x, particle.y);
             context.lineTo(next.x, next.y);

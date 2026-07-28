@@ -13,8 +13,6 @@ export default function SiteFrame({
   return (
     <main className="site-frame">
       <ParticleField />
-      <div className="background-aurora aurora-one" aria-hidden="true" />
-      <div className="background-aurora aurora-two" aria-hidden="true" />
       <div className="page-shell">
         <SiteHeader active={active} />
         {children}

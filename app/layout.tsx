@@ -25,12 +25,21 @@ export const metadata: Metadata = {
     description:
       "Projects, notes, and a growing computational linguistics journey by Jim Zhou.",
     type: "website",
+    images: [
+      {
+        url: "https://jimzhou03-pixel-lab.weijiezhou03.chatgpt.site/og.png",
+        width: 1536,
+        height: 875,
+        alt: "Jim Zhou — Computational Linguistics and NLP",
+      },
+    ],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: "Jim Zhou — Computational Linguistics & NLP",
     description:
       "Projects, notes, and a growing computational linguistics journey by Jim Zhou.",
+    images: ["https://jimzhou03-pixel-lab.weijiezhou03.chatgpt.site/og.png"],
   },
 };
 
