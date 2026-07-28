@@ -31,8 +31,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: "https://jimzhou03.github.io/og.png",
-        width: 1660,
-        height: 947,
+        width: 1731,
+        height: 909,
         alt: "Jim Zhou — Computational Linguistics and NLP",
       },
     ],

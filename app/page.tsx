@@ -1,173 +1,152 @@
 import SiteFrame from "./components/SiteFrame";
 import { featuredProject } from "./siteConfig";
 
+const title = ["J", "I", "M", "Z", "H", "O", "U"];
+
 const questions = [
-  {
-    number: "01",
-    title: "Retrieval or structure?",
-    copy: "When does a knowledge graph add more than vector search to a language system?",
-  },
-  {
-    number: "02",
-    title: "Grounded, but how?",
-    copy: "How should course-question answers be evaluated beyond fluency and confidence?",
-  },
-  {
-    number: "03",
-    title: "Across languages.",
-    copy: "How can multilingual systems preserve terminology, evidence and context?",
-  },
+  ["01", "RETRIEVAL", "When does a knowledge graph add more than vector search?"],
+  ["02", "EVIDENCE", "How do we judge whether an answer is genuinely grounded?"],
+  ["03", "LANGUAGE", "What survives when terminology moves across languages?"],
 ];
 
 const archive = [
-  { number: "01", title: "My dog", note: "Home / everyday company", className: "dog" },
-  { number: "02", title: "Courtyard cat", note: "A familiar visitor", className: "cat" },
-  { number: "03", title: "Undergraduate campus", note: "Where this chapter began", className: "campus" },
+  ["01", "DOG", "Home / everyday company"],
+  ["02", "CAT", "A familiar courtyard visitor"],
+  ["03", "CAMPUS", "Where this chapter began"],
 ];
 
 export default function Home() {
   return (
     <SiteFrame active="home">
-      <section className="constellation-hero">
-        <div className="hero-status">
-          <span>PORTFOLIO / 2026</span>
-          <span>CHINA → GERMANY</span>
+      <section className="playful-hero">
+        <div className="hero-intro">
+          <span>HELLO, I&apos;M</span>
+          <p>COMPUTATIONAL LINGUISTICS · NLP</p>
         </div>
 
-        <div className="hero-grid">
-          <div className="constellation-copy">
-            <p className="micro-label">COMPUTATIONAL LINGUISTICS · NLP</p>
-            <h1><span>JIM</span><span>ZHOU</span></h1>
-            <p className="hero-statement">
-              I&apos;m preparing to study Computational Linguistics in Germany,
-              exploring how retrieval and structured knowledge can make
-              language-model answers more grounded, traceable and useful.
-            </p>
-            <div className="hero-actions">
-              <a className="action-button primary" href="#work">Selected work <span>↓</span></a>
-              <a className="action-button ghost" href="/about">About me <span>↗</span></a>
-            </div>
-          </div>
+        <h1 className="kinetic-title" aria-label="Jim Zhou">
+          {title.map((letter, index) => (
+            <span className={`letter-window letter-${index}`} key={`${letter}-${index}`}>
+              <i className="kinetic-letter">{letter}</i>
+            </span>
+          ))}
+        </h1>
 
-          <div className="language-map" aria-label="An interactive constellation of language technology topics">
-            <div className="map-grid" aria-hidden="true" />
-            <span className="map-node node-language">language</span>
-            <span className="map-node node-retrieval">retrieval</span>
-            <span className="map-node node-knowledge">knowledge</span>
-            <span className="map-node node-context">context</span>
-            <span className="map-node node-evidence">evidence</span>
-            <i className="map-link link-a" aria-hidden="true" />
-            <i className="map-link link-b" aria-hidden="true" />
-            <i className="map-link link-c" aria-hidden="true" />
-            <i className="map-link link-d" aria-hidden="true" />
-            <i className="map-link link-e" aria-hidden="true" />
-            <div className="map-core">
-              <small>CURRENT ORBIT</small>
-              <strong>meaning</strong>
-              <span>CL / NLP</span>
-            </div>
-            <div className="map-readout">
-              <span>05 NODES</span>
-              <span>MOVE CURSOR TO DISTURB FIELD</span>
-            </div>
-          </div>
+        <div className="hero-stamp">
+          <span>MY CURRENT<br />FAVOURITE QUESTION</span>
+          <strong>How does a machine<br />hold on to meaning?</strong>
+          <i>↘</i>
         </div>
 
-        <div className="hero-foot">
-          <span>LANGUAGE / RETRIEVAL / KNOWLEDGE</span>
-          <span>SCROLL TO EXPLORE ↓</span>
+        <div className="floating-words" aria-hidden="true">
+          <span>word</span><span>context</span><span>graph</span>
+          <span>evidence</span><span>meaning?</span>
+        </div>
+
+        <div className="hero-bottom">
+          <p>
+            I&apos;m preparing to study Computational Linguistics in Germany,
+            exploring how retrieval and structured knowledge can make
+            language-model answers more grounded and useful.
+          </p>
+          <div>
+            <span>CHINA → GERMANY</span>
+            <span>OCTOBER 2026</span>
+          </div>
+          <a href="#work">SEE THE WORK <b>↓</b></a>
         </div>
       </section>
 
-      <section className="question-section" id="questions">
-        <div className="section-intro">
-          <p className="section-index">01 / QUESTIONS</p>
-          <h2>A portfolio built around what I want to understand.</h2>
-          <p>
-            I am early in the journey, so the honest starting point is not a long
-            list of claims. It is a small set of technical questions that can grow
-            into coursework, experiments and research.
-          </p>
+      <div className="marquee" aria-hidden="true">
+        <div className="marquee-track">
+          <span>LANGUAGE IS A SYSTEM OF RELATIONSHIPS · RETRIEVE · CONNECT · QUESTION · </span>
+          <span>LANGUAGE IS A SYSTEM OF RELATIONSHIPS · RETRIEVE · CONNECT · QUESTION · </span>
         </div>
-        <div className="question-list">
-          {questions.map((question) => (
-            <article key={question.number}>
-              <span>{question.number}</span>
-              <h3>{question.title}</h3>
-              <p>{question.copy}</p>
+      </div>
+
+      <section className="curiosity-section" id="questions">
+        <header className="motion-reveal">
+          <span>01 / QUESTIONS FIRST</span>
+          <h2>I don&apos;t need to pretend<br />I have all the answers.</h2>
+          <p>
+            A useful portfolio can show the quality of the questions behind the
+            work—not just a long inventory of finished things.
+          </p>
+        </header>
+        <div className="question-ribbons">
+          {questions.map(([number, label, copy]) => (
+            <article className="motion-reveal" key={number}>
+              <span>{number}</span>
+              <strong>{label}</strong>
+              <p>{copy}</p>
+              <i>↗</i>
             </article>
           ))}
         </div>
       </section>
 
-      <section className="selected-case" id="work">
-        <div className="case-label">
-          <p className="section-index">02 / SELECTED WORK</p>
-          <span>ONE PROJECT, EXPLAINED PROPERLY</span>
+      <section className="work-chapter" id="work">
+        <div className="work-heading motion-reveal">
+          <span>02 / ONE REAL PROJECT</span>
+          <h2>{featuredProject.title}</h2>
+          <p>{featuredProject.description}</p>
         </div>
-        <article className="case-feature">
-          <div className="case-feature-copy">
-            <p>{featuredProject.kicker}</p>
-            <h2>{featuredProject.title}</h2>
-            <p>{featuredProject.description}</p>
-            <div className="tag-row">
-              {featuredProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
-            </div>
-            <a className="action-button light" href={`/projects/${featuredProject.slug}`}>
-              Read the case study <span>↗</span>
-            </a>
+
+        <div className="system-story">
+          <article className="story-step">
+            <span>01</span><strong>COURSE<br />MATERIAL</strong><small>the source</small>
+          </article>
+          <i>→</i>
+          <article className="story-step">
+            <span>02</span><strong>RETRIEVAL</strong><small>find evidence</small>
+          </article>
+          <i>+</i>
+          <article className="story-step invert">
+            <span>03</span><strong>KNOWLEDGE<br />GRAPH</strong><small>connect ideas</small>
+          </article>
+          <i>→</i>
+          <article className="story-step">
+            <span>04</span><strong>ANSWER</strong><small>stay grounded</small>
+          </article>
+        </div>
+
+        <div className="work-footer motion-reveal">
+          <div>
+            {featuredProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
           </div>
-          <div className="system-map" aria-label="Project architecture: course materials to retrieval and graph context to grounded answers">
-            <span className="system-node source">COURSE<br />MATERIAL</span>
-            <span className="system-node retrieve">RETRIEVAL</span>
-            <span className="system-node graph">KNOWLEDGE<br />GRAPH</span>
-            <span className="system-node answer">GROUNDED<br />ANSWER</span>
-            <i className="system-line line-one" />
-            <i className="system-line line-two" />
-            <i className="system-line line-three" />
-            <i className="system-line line-four" />
-            <div className="system-center">RAG <b>+</b> KG</div>
-          </div>
-        </article>
+          <a href={`/projects/${featuredProject.slug}`}>OPEN THE CASE STUDY ↗</a>
+        </div>
       </section>
 
-      <section className="life-archive" id="life">
-        <div className="section-intro compact">
-          <p className="section-index">03 / PERSONAL ARCHIVE</p>
-          <h2>A little life outside the terminal.</h2>
+      <section className="life-chapter" id="life">
+        <header className="motion-reveal">
+          <span>03 / LIFE, TOO</span>
+          <h2>Not everything meaningful<br />happens in a terminal.</h2>
           <p>
-            The places and animals that make a life feel real. These frames are
-            ready for your original photographs.
+            Three small windows into home. Your original photographs will live
+            here; the frames are intentionally waiting for them.
           </p>
-        </div>
-        <div className="archive-grid">
-          {archive.map((item) => (
-            <figure className={`archive-card ${item.className}`} key={item.number}>
-              <div className="photo-placeholder">
-                <span>ORIGINAL PHOTO<br />COMING SOON</span>
-                <b>{item.number}</b>
+        </header>
+
+        <div className="photo-stack">
+          {archive.map(([number, title, note], index) => (
+            <figure className={`motion-reveal photo-card card-${index}`} key={number}>
+              <div>
+                <b>{number}</b>
+                <span>YOUR PHOTO<br />GOES HERE</span>
               </div>
-              <figcaption>
-                <strong>{item.title}</strong>
-                <span>{item.note}</span>
-              </figcaption>
+              <figcaption><strong>{title}</strong><span>{note}</span></figcaption>
             </figure>
           ))}
         </div>
       </section>
 
-      <section className="next-chapter">
-        <p className="section-index">04 / NOW & NEXT</p>
-        <div>
-          <h2>Learning first.<br />Building in public.</h2>
-          <p>
-            Germany · October 2026<br />
-            MSc Computational Linguistics
-          </p>
-          <a href="https://github.com/jimzhou03" target="_blank" rel="noreferrer">
-            FOLLOW THE WORK ON GITHUB ↗
-          </a>
-        </div>
+      <section className="closing-note motion-reveal">
+        <p>BUILDING A LIFE AROUND</p>
+        <h2>language,<br /><i>curiosity</i> & useful systems.</h2>
+        <a href="https://github.com/jimzhou03" target="_blank" rel="noreferrer">
+          FIND ME ON GITHUB ↗
+        </a>
       </section>
     </SiteFrame>
   );
