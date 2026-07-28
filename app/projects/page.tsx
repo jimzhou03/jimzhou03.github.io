@@ -13,7 +13,7 @@ export default function ProjectsPage() {
         </p>
       </header>
 
-      <section className="project-list">
+      <section className="project-list single">
         <article className="project-list-card glass-panel">
           <div className="project-number">01</div>
           <div className="project-list-visual">
@@ -32,17 +32,6 @@ export default function ProjectsPage() {
           </div>
         </article>
 
-        <article className="future-project glass-panel">
-          <span>02</span>
-          <div>
-            <p className="micro-label">NEXT SLOT / NOT YET CLAIMED</p>
-            <h2>The next project will earn its place here.</h2>
-            <p>
-              Coursework, research collaboration or a focused language technology
-              experiment — documented when the evidence is ready.
-            </p>
-          </div>
-        </article>
       </section>
     </SiteFrame>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "./language-constellation.css";
 
 const geist = Geist({
   variable: "--font-sans",
@@ -22,17 +22,17 @@ export const metadata: Metadata = {
     template: "%s · Jim Zhou",
   },
   description:
-    "A digital garden for computational linguistics, NLP, retrieval-augmented generation, knowledge graphs, and a master's journey in Germany.",
+    "Jim Zhou's portfolio — computational linguistics, NLP, retrieval, knowledge graphs, and a new chapter in Germany.",
   openGraph: {
     title: "Jim Zhou — Computational Linguistics & NLP",
     description:
-      "Projects, notes, and a growing computational linguistics journey by Jim Zhou.",
+      "Language, retrieval and knowledge — a computational linguistics portfolio by Jim Zhou.",
     type: "website",
     images: [
       {
         url: "https://jimzhou03.github.io/og.png",
-        width: 1536,
-        height: 875,
+        width: 1660,
+        height: 947,
         alt: "Jim Zhou — Computational Linguistics and NLP",
       },
     ],
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Jim Zhou — Computational Linguistics & NLP",
     description:
-      "Projects, notes, and a growing computational linguistics journey by Jim Zhou.",
+      "Language, retrieval and knowledge — a computational linguistics portfolio by Jim Zhou.",
     images: ["https://jimzhou03.github.io/og.png"],
   },
 };

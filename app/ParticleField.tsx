@@ -30,19 +30,19 @@ export default function ParticleField() {
     let particles: Particle[] = [];
 
     const palette = [
-      "rgba(25, 26, 22, 0.18)",
-      "rgba(119, 162, 62, 0.28)",
-      "rgba(25, 26, 22, 0.10)",
+      "rgba(255, 255, 255, 0.42)",
+      "rgba(255, 255, 255, 0.22)",
+      "rgba(171, 171, 171, 0.28)",
     ];
 
     const createParticles = () => {
-      const areaTarget = compactScreen ? 34 : Math.min(76, Math.max(48, Math.round(width / 18)));
+      const areaTarget = compactScreen ? 32 : Math.min(68, Math.max(46, Math.round(width / 22)));
       particles = Array.from({ length: areaTarget }, (_, index) => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * (reducedMotion ? 0 : 0.24),
-        vy: (Math.random() - 0.5) * (reducedMotion ? 0 : 0.24),
-        size: index % 7 === 0 ? 2.2 : 1.2 + Math.random() * 0.7,
+        vx: (Math.random() - 0.5) * (reducedMotion ? 0 : 0.2),
+        vy: (Math.random() - 0.5) * (reducedMotion ? 0 : 0.2),
+        size: index % 8 === 0 ? 2.2 : 0.8 + Math.random() * 0.8,
         tone: index % palette.length,
       }));
     };
@@ -78,8 +78,8 @@ export default function ParticleField() {
             const dx = particle.x - pointer.x;
             const dy = particle.y - pointer.y;
             const distanceSquared = dx * dx + dy * dy;
-            if (distanceSquared < 14000 && distanceSquared > 1) {
-              const force = (1 - Math.sqrt(distanceSquared) / 120) * 0.035;
+            if (distanceSquared < 19600 && distanceSquared > 1) {
+              const force = (1 - Math.sqrt(distanceSquared) / 140) * 0.022;
               particle.x += dx * force;
               particle.y += dy * force;
             }
@@ -92,10 +92,10 @@ export default function ParticleField() {
           const dy = particle.y - next.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 112) {
+          if (distance < 128) {
             context.beginPath();
-            context.strokeStyle = `rgba(25, 26, 22, ${(1 - distance / 112) * 0.07})`;
-            context.lineWidth = 0.75;
+            context.strokeStyle = `rgba(255, 255, 255, ${(1 - distance / 128) * 0.1})`;
+            context.lineWidth = 0.65;
             context.moveTo(particle.x, particle.y);
             context.lineTo(next.x, next.y);
             context.stroke();
