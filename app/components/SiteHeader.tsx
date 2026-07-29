@@ -10,8 +10,8 @@ const items = [
 export default function SiteHeader({ active }: { active: string }) {
   return (
     <header className="site-header">
-      <Link className="site-logo" href="/" aria-label="Jim Zhou home">
-        JZ<span>/26</span>
+      <Link className="site-logo" href="/" aria-label="Weijie Zhou home">
+        WZ<span>/26</span>
       </Link>
 
       <nav className="main-nav" aria-label="Primary navigation">

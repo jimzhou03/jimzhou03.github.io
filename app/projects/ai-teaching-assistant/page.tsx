@@ -2,17 +2,17 @@ import SiteFrame from "../../components/SiteFrame";
 import { featuredProject } from "../../../content/projects";
 
 const route = [
-  ["01", "COURSE MATERIAL", "Prepare and segment the source material."],
-  ["02", "RETRIEVAL", "Find passages relevant to a learner's question."],
-  ["03", "GRAPH CONTEXT", "Bring connected concepts and relations into view."],
-  ["04", "GROUNDED ANSWER", "Generate a response tied to available evidence."],
+  ["01", "DOMAIN MATERIAL", "Prepare course knowledge for vector and graph retrieval."],
+  ["02", "HYBRID RETRIEVAL", "Retrieve semantically relevant passages and connected entities."],
+  ["03", "DIFY WORKFLOW", "Assemble evidence, graph context and prompt logic into an answer route."],
+  ["04", "TRACEABLE ANSWER", "Generate a response with citations to the available knowledge."],
 ];
 
 const evaluation = [
-  ["GROUNDEDNESS", "Is the answer supported by retrieved course material?"],
-  ["RELEVANCE", "Does the response address the learner's actual question?"],
-  ["TRACEABILITY", "Can a reader understand where the answer came from?"],
-  ["COVERAGE", "Are important related concepts included without drifting?"],
+  ["1.000", "Citation accuracy in the project evaluation."],
+  ["93.4%", "Average evidence coverage across the evaluated answers."],
+  ["100%", "Citation rate reported for the evaluated question set."],
+  ["104 ms", "Average graph-query latency on the 30-question main route."],
 ];
 
 export default function TeachingAssistantCaseStudy() {
@@ -38,7 +38,7 @@ export default function TeachingAssistantCaseStudy() {
         <dl>
           <div><dt>YEAR</dt><dd>{featuredProject.year}</dd></div>
           <div><dt>ROLE</dt><dd>{featuredProject.role}</dd></div>
-          <div><dt>STATUS</dt><dd>{featuredProject.status}</dd></div>
+          <div><dt>SYSTEM</dt><dd>LIVE · LOGIN REQUIRED</dd></div>
         </dl>
       </header>
 
@@ -47,15 +47,16 @@ export default function TeachingAssistantCaseStudy() {
           <span>01 / THE QUESTION</span>
           <h2>How can a course assistant answer with better grounding?</h2>
           <p>
-            A language model can produce fluent answers while still missing the
-            specific course context a learner needs. This project explored a
-            combined retrieval and knowledge-graph approach to make the evidence
-            path clearer and the response more connected to course concepts.
+            A language model can produce fluent answers while missing the
+            specific domain context a learner needs. This bachelor capstone used
+            PostgreSQL with Apache AGE, vector retrieval and graph context to
+            make the evidence path clearer and connect answers to related course
+            concepts.
           </p>
         </article>
         <blockquote className="case-pullquote">
-          “Vector retrieval finds useful text. A graph can make conceptual
-          relationships explicit.”
+          “Vector retrieval finds useful text. A graph makes the relationships
+          between domain concepts explicit.”
         </blockquote>
       </section>
 
@@ -78,10 +79,10 @@ export default function TeachingAssistantCaseStudy() {
       <section className="evaluation-panel">
         <header>
           <span>03 / EVALUATION</span>
-          <h2>Judge more than fluency.</h2>
+          <h2>Evidence from the<br />system report.</h2>
           <p>
-            The public documentation is still growing, so these are the
-            evaluation dimensions the final write-up should make visible.
+            These figures are taken from the project report. They describe a
+            limited evaluation, not a claim of general model quality.
           </p>
         </header>
         <div>
@@ -96,12 +97,23 @@ export default function TeachingAssistantCaseStudy() {
       </section>
 
       <section className="honest-status">
-        <span>04 / HONEST STATUS</span>
-        <h2>The system exists.<br /><em>The documentation is still becoming clearer.</em></h2>
+        <span>04 / MY CONTRIBUTION</span>
+        <h2>Workflow, graph and deployment.<br /><em>Built as a team system.</em></h2>
         <p>
-          Architecture details, representative examples, screenshots, evaluation
-          notes and limitations will be added as the project is prepared for
-          public presentation. No live demo is claimed yet.
+          I designed the Dify workflow, knowledge-graph integration, backend
+          fields and data structure, selected and deployed the server, and
+          contributed to the interface design. A teammate implemented the
+          frontend code. The deployed system remains available as a team
+          project; representative screenshots and limitations can be added when
+          the case study is prepared for public presentation.
+          <a
+            className="case-external-link"
+            href="https://www.zcst-ai-assistant.online/login"
+            target="_blank"
+            rel="noreferrer"
+          >
+            OPEN TEAM SYSTEM · LOGIN REQUIRED <span>↗</span>
+          </a>
         </p>
       </section>
     </SiteFrame>

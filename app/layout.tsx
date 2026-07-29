@@ -19,31 +19,31 @@ export const metadata: Metadata = {
     canonical: "/",
   },
   title: {
-    default: "Jim Zhou — Computational Linguistics & NLP",
-    template: "%s · Jim Zhou",
+    default: "Weijie Zhou — NLP & Large Language Models",
+    template: "%s · Weijie Zhou",
   },
   description:
-    "Jim Zhou's portfolio — computational linguistics, NLP, retrieval, knowledge graphs, and the relationships that make language meaningful.",
+    "Weijie Zhou's portfolio — NLP, large language models, retrieval-augmented generation, knowledge graphs, and model adaptation.",
   openGraph: {
-    title: "Jim Zhou — Computational Linguistics & NLP",
+    title: "Weijie Zhou — NLP & Large Language Models",
     description:
-      "Language is a universe of relationships — a computational linguistics portfolio by Jim Zhou.",
+      "From language data to grounded systems — an NLP and LLM portfolio by Weijie Zhou.",
     type: "website",
     images: [
       {
-        url: "https://jimzhou03.github.io/og.png",
+        url: "https://jimzhou03.github.io/og-v2.png",
         width: 1733,
         height: 907,
-        alt: "Jim Zhou — Computational Linguistics and NLP",
+        alt: "Weijie Zhou — NLP and Large Language Models",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Jim Zhou — Computational Linguistics & NLP",
+    title: "Weijie Zhou — NLP & Large Language Models",
     description:
-      "Language is a universe of relationships — a computational linguistics portfolio by Jim Zhou.",
-    images: ["https://jimzhou03.github.io/og.png"],
+      "From language data to grounded systems — an NLP and LLM portfolio by Weijie Zhou.",
+    images: ["https://jimzhou03.github.io/og-v2.png"],
   },
 };
 

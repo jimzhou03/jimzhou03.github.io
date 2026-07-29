@@ -13,8 +13,8 @@ export default function ProjectsPage() {
         <h1>Selected<br /><em>work.</em></h1>
         <p>
           A small archive by design. I would rather document one real system
-          carefully than fill a grid with projects that do not yet have a useful
-          story.
+          or reproducible experiment carefully than fill a grid with coursework
+          that does not yet have a useful story.
         </p>
       </header>
 
@@ -31,9 +31,9 @@ export default function ProjectsPage() {
                 <i className="work-planet-core" />
                 <i className="work-planet-ring ring-one" />
                 <i className="work-planet-ring ring-two" />
-                <span className="work-satellite sat-one">RAG</span>
-                <span className="work-satellite sat-two">KG</span>
-                <span className="work-satellite sat-three">QA</span>
+                <span className="work-satellite sat-one">{project.slug === "ai-teaching-assistant" ? "RAG" : "GLM"}</span>
+                <span className="work-satellite sat-two">{project.slug === "ai-teaching-assistant" ? "KG" : "LoRA"}</span>
+                <span className="work-satellite sat-three">{project.slug === "ai-teaching-assistant" ? "QA" : "SFT"}</span>
               </div>
               <div className="work-window-copy">
                 <div className="work-meta">
@@ -55,12 +55,12 @@ export default function ProjectsPage() {
         ))}
 
         <article className="future-work-panel">
-          <span>RESEARCH EXPERIMENTS / RESERVED</span>
-          <h2>The next entry appears only when there is something concrete to show.</h2>
+          <span>COURSEWORK / DELIBERATELY OMITTED</span>
+          <h2>The archive stays small until another project earns its place.</h2>
           <p>
-            Retrieval tests, evaluation notes and small language experiments can
-            grow into this space later. Nothing is being invented to make the
-            archive look larger.
+            Introductory course exercises are not included just to make the
+            archive look larger. Future entries will need a clear technical
+            question, evidence and an honest account of my contribution.
           </p>
         </article>
       </section>

@@ -2,10 +2,10 @@ export default function SiteFooter() {
   return (
     <footer className="site-footer">
       <div>
-        <b>JIM ZHOU</b>
-        <small>语言 / MEANING / KNOWLEDGE</small>
+        <b>WEIJIE ZHOU</b>
+        <small>模型 / RETRIEVAL / KNOWLEDGE</small>
       </div>
-      <p>© 2026 · LANGUAGE IS A UNIVERSE OF RELATIONSHIPS</p>
+      <p>© 2026 · FROM LANGUAGE DATA TO RELIABLE SYSTEMS</p>
       <a href="https://github.com/jimzhou03" target="_blank" rel="noreferrer">
         GITHUB ↗
       </a>

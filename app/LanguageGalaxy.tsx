@@ -10,9 +10,9 @@ type Star = {
   pulse: number;
 };
 
-const chineseOrbit = ["语言", "语义", "句法", "语境", "词法", "知识", "检索", "生成"];
-const englishOrbit = ["LANGUAGE", "MEANING", "SYNTAX", "CONTEXT", "KNOWLEDGE", "RETRIEVAL"];
-const signalOrbit = ["中", "文", "NLP", "RAG", "KG", "语", "言", "学"];
+const chineseOrbit = ["上下文", "检索", "知识", "推理", "生成", "对齐", "语料", "评估"];
+const englishOrbit = ["TOKEN", "EMBEDDING", "RETRIEVAL", "RAG", "KNOWLEDGE", "AGENT"];
+const signalOrbit = ["中", "文", "NLP", "LLM", "RAG", "KG", "训", "练"];
 
 export default function LanguageGalaxy() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -215,7 +215,7 @@ export default function LanguageGalaxy() {
       context.fillStyle = "rgba(241,235,219,.78)";
       context.font = `${compact ? 8 : 9}px "Courier New", monospace`;
       context.textAlign = "center";
-      context.fillText("MEANING / 意义", 0, 3);
+      context.fillText("CONTEXT / 上下文", 0, 3);
       context.restore();
 
       if (!reduceMotion && !document.hidden) {
