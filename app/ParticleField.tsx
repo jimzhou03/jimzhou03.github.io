@@ -48,15 +48,13 @@ export default function ParticleField() {
       gsap.utils
         .toArray<HTMLElement>(
           [
-            ".editorial-intro",
-            ".question-orbits article",
-            ".featured-window",
-            ".life-preview-card",
-            ".home-closing",
+            ".home-profile-heading",
+            ".home-profile-intro",
+            ".education-ledger article",
             ".work-window",
             ".photo-archive-entry",
-            ".about-story-grid > *",
-            ".interest-orbit-list article",
+            ".about-minimal-grid > *",
+            ".about-contact-line",
             ".case-editorial-grid > *",
             ".system-route article",
             ".evaluation-panel article",

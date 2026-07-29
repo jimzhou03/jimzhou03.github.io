@@ -1,14 +1,6 @@
 import Link from "next/link";
 import LanguageGalaxy from "./LanguageGalaxy";
 import SiteFrame from "./components/SiteFrame";
-import { featuredProject } from "../content/projects";
-import { lifeEntries } from "../content/life";
-
-const researchQuestions = [
-  ["01", "RETRIEVAL", "What should a system retrieve before it begins to answer?"],
-  ["02", "STRUCTURE", "When does a knowledge graph add more than vector similarity?"],
-  ["03", "ADAPTATION", "How much behavior can parameter-efficient fine-tuning change?"],
-];
 
 export default function Home() {
   return (
@@ -47,109 +39,31 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="editorial-intro">
-        <div className="section-marker">
-          <span>01 / FIELD NOTES</span>
-          <i />
+      <section className="home-profile" aria-labelledby="profile-title">
+        <div className="home-profile-heading">
+          <span>01 / PROFILE</span>
+          <h2 id="profile-title">NLP systems,<br /><em>from China to Heidelberg.</em></h2>
         </div>
-        <div>
-          <p className="display-serif">
-            Between <em>language data</em>, models and evidence.
-          </p>
+
+        <div className="home-profile-intro">
           <p>
-            I am an incoming M.A. student in Computational Linguistics at
-            Heidelberg University. My work sits on the engineering side of the
-            field: large language models, retrieval, structured knowledge and
-            evaluation.
+            I am Zhou Weijie, focused on natural language processing and
+            large language-model systems.
           </p>
+          <Link href="/about">MORE ABOUT ME <span>↗</span></Link>
         </div>
-      </section>
 
-      <section className="question-observatory">
-        <header>
-          <p className="section-marker">02 / QUESTIONS BEFORE ANSWERS</p>
-          <h2>Three coordinates<br />for the work ahead.</h2>
-        </header>
-        <div className="question-orbits">
-          {researchQuestions.map(([number, label, question]) => (
-            <article key={number}>
-              <span>{number}</span>
-              <strong>{label}</strong>
-              <p>{question}</p>
-              <i>↗</i>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="featured-window">
-        <div className="window-bar">
-          <span><i /><i /><i /></span>
-          <b>WORK / FEATURED CASE STUDY</b>
-          <small>01 / 01</small>
-        </div>
-        <div className="featured-window-body">
-          <div className="project-orbit-visual" aria-hidden="true">
-            <span className="project-core">ANSWER</span>
-            <span className="project-node node-a">RAG</span>
-            <span className="project-node node-b">KG</span>
-            <span className="project-node node-c">EVIDENCE</span>
-            <i className="project-ring ring-a" />
-            <i className="project-ring ring-b" />
-          </div>
-          <div className="featured-copy">
-            <p>{featuredProject.category}</p>
-            <h2>{featuredProject.title}</h2>
-            <blockquote>“{featuredProject.question}”</blockquote>
-            <div>
-              {featuredProject.tags.map((tag) => <span key={tag}>{tag}</span>)}
-            </div>
-            <Link href={`/projects/${featuredProject.slug}`}>
-              READ THE CASE STUDY <span>↗</span>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="life-preview">
-        <header>
-          <div className="section-marker">
-            <span>03 / LIFE ARCHIVE</span>
-            <i />
-          </div>
-          <h2>Not everything meaningful<br />happens in a terminal.</h2>
-          <Link href="/life">OPEN THE ARCHIVE ↗</Link>
-        </header>
-
-        <div className="life-preview-grid">
-          {lifeEntries.map((entry, index) => (
-            <figure className={`life-preview-card life-card-${index + 1}`} key={entry.id}>
-              <div className="photo-waiting">
-                <span>{entry.id}</span>
-                <b>PHOTOGRAPH<br />COMING NEXT</b>
-              </div>
-              <figcaption>
-                <strong>{entry.category}</strong>
-                <span>{entry.title}</span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
-
-      <section className="home-closing">
-        <p className="section-marker">04 / A LIVING INDEX</p>
-        <h2>
-          Building language systems,<br />
-          <em>one grounded answer</em><br />
-          at a time.
-        </h2>
-        <div>
-          <p>
-            This site will grow with the work: one reproducible experiment, one
-            honest system case study and one small photograph at a time.
-          </p>
-          <Link href="/about">CONTINUE TO ABOUT <span>→</span></Link>
+        <div className="education-ledger">
+          <article>
+            <span>01 / BACHELOR</span>
+            <h3>B.Eng. in Intelligent<br />Science and Technology</h3>
+            <p>Top 10% · China</p>
+          </article>
+          <article>
+            <span>02 / MASTER</span>
+            <h3>M.A. in Computational<br />Linguistics</h3>
+            <p>Heidelberg University · October 2026</p>
+          </article>
         </div>
       </section>
     </SiteFrame>

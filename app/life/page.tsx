@@ -9,11 +9,9 @@ export default function LifePage() {
           <span>LIFE / PHOTO ARCHIVE</span>
           <b>03 / 04</b>
         </div>
-        <h1>Small lives,<br /><em>quiet places.</em></h1>
+        <h1>Cats<br /><em>&amp; dogs.</em></h1>
         <p>
-          A personal counterweight to the technical work: home, animals and the
-          campus where this chapter began. Your photographs will replace these
-          frames without changing the composition.
+          A small photo archive of the animals around home.
         </p>
       </header>
 
@@ -42,13 +40,6 @@ export default function LifePage() {
         ))}
       </section>
 
-      <section className="life-note">
-        <span>ARCHIVE PRINCIPLE</span>
-        <p>
-          The photographs stay lightly captioned. This page is a visual record,
-          not a public diary.
-        </p>
-      </section>
     </SiteFrame>
   );
 }

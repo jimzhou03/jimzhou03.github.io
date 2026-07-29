@@ -6,9 +6,11 @@ import SiteHeader from "./SiteHeader";
 export default function SiteFrame({
   active,
   children,
+  showFooter = true,
 }: {
   active: string;
   children: ReactNode;
+  showFooter?: boolean;
 }) {
   return (
     <main className="site-frame">
@@ -16,7 +18,7 @@ export default function SiteFrame({
       <div className="page-shell">
         <SiteHeader active={active} />
         {children}
-        <SiteFooter />
+        {showFooter ? <SiteFooter /> : null}
       </div>
     </main>
   );
