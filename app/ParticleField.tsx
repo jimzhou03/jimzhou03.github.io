@@ -23,64 +23,71 @@ export default function ParticleField() {
     if (reducedMotion) return;
 
     const scope = gsap.context(() => {
-      gsap.from(".kinetic-letter", {
-        yPercent: 115,
-        rotate: (index) => (index % 2 ? 5 : -4),
-        duration: 1.05,
-        stagger: 0.055,
-        ease: "power4.out",
-      });
-
-      gsap.from(".hero-intro, .hero-bottom > *", {
-        y: 24,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.08,
-        delay: 0.42,
-        ease: "power3.out",
-      });
-
-      gsap.to(".hero-stamp", {
-        rotate: 12,
-        y: -18,
-        scrollTrigger: {
-          trigger: ".playful-hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: 0.8,
-        },
-      });
-
-      gsap.utils.toArray<HTMLElement>(".motion-reveal").forEach((element) => {
-        gsap.from(element, {
-          y: 48,
+      const heroCopy = document.querySelectorAll(".orbital-hero-copy > *");
+      if (heroCopy.length) {
+        gsap.from(heroCopy, {
+          y: 28,
           opacity: 0,
           duration: 0.9,
+          stagger: 0.07,
           ease: "power3.out",
-          scrollTrigger: { trigger: element, start: "top 88%" },
         });
-      });
+      }
 
-      const steps = gsap.utils.toArray<HTMLElement>(".story-step");
-      gsap.from(steps, {
-        x: 110,
-        opacity: 0,
-        stagger: 0.13,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".system-story",
-          start: "top 68%",
-          end: "center 48%",
-          scrub: 0.7,
-        },
-      });
+      const galaxyCaption = document.querySelector(".galaxy-caption");
+      if (galaxyCaption) {
+        gsap.from(galaxyCaption, {
+          x: 22,
+          opacity: 0,
+          duration: 1,
+          delay: 0.35,
+          ease: "power3.out",
+        });
+      }
 
-      gsap.to(".marquee-track", {
-        xPercent: -50,
-        duration: 22,
-        repeat: -1,
-        ease: "none",
-      });
+      gsap.utils
+        .toArray<HTMLElement>(
+          [
+            ".editorial-intro",
+            ".question-orbits article",
+            ".featured-window",
+            ".life-preview-card",
+            ".home-closing",
+            ".work-window",
+            ".photo-archive-entry",
+            ".about-story-grid > *",
+            ".interest-orbit-list article",
+            ".case-editorial-grid > *",
+            ".system-route article",
+            ".evaluation-panel article",
+          ].join(", "),
+        )
+        .forEach((element) => {
+          gsap.from(element, {
+            y: 42,
+            opacity: 0,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: element,
+              start: "top 88%",
+              once: true,
+            },
+          });
+        });
+
+      const slowOrbits = document.querySelectorAll(
+        ".project-ring, .work-planet-ring, .case-title-orbit",
+      );
+      if (slowOrbits.length) {
+        gsap.to(slowOrbits, {
+          rotate: 360,
+          duration: 70,
+          repeat: -1,
+          ease: "none",
+          transformOrigin: "50% 50%",
+        });
+      }
     });
 
     return () => scope.revert();

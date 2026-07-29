@@ -1,9 +1,9 @@
 import Link from "next/link";
 
 const items = [
-  { id: "work", label: "Work", href: "/#work" },
-  { id: "questions", label: "Questions", href: "/#questions" },
-  { id: "life", label: "Life", href: "/#life" },
+  { id: "index", label: "Index", href: "/" },
+  { id: "work", label: "Work", href: "/projects" },
+  { id: "life", label: "Life", href: "/life" },
   { id: "about", label: "About", href: "/about" },
 ];
 
