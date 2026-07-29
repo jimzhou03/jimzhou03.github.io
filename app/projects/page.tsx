@@ -31,9 +31,9 @@ export default function ProjectsPage() {
                 <i className="work-planet-core" />
                 <i className="work-planet-ring ring-one" />
                 <i className="work-planet-ring ring-two" />
-                <span className="work-satellite sat-one">{project.tags[0]}</span>
-                <span className="work-satellite sat-two">{project.tags[1]}</span>
-                <span className="work-satellite sat-three">{project.tags[2]}</span>
+                <span className="work-satellite sat-one">{project.slug === "ai-teaching-assistant" ? "RAG" : "GLM"}</span>
+                <span className="work-satellite sat-two">{project.slug === "ai-teaching-assistant" ? "KG" : "LoRA"}</span>
+                <span className="work-satellite sat-three">{project.slug === "ai-teaching-assistant" ? "QA" : "SFT"}</span>
               </div>
               <div className="work-window-copy">
                 <div className="work-meta">
@@ -54,6 +54,15 @@ export default function ProjectsPage() {
           </article>
         ))}
 
+        <article className="future-work-panel">
+          <span>COURSEWORK / DELIBERATELY OMITTED</span>
+          <h2>The archive stays small until another project earns its place.</h2>
+          <p>
+            Introductory course exercises are not included just to make the
+            archive look larger. Future entries will need a clear technical
+            question, evidence and an honest account of my contribution.
+          </p>
+        </article>
       </section>
     </SiteFrame>
   );

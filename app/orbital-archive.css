@@ -175,16 +175,16 @@ body {
   left: max(54px, calc((100vw - 1460px) / 2 + 38px));
   display: flex;
   flex-direction: column;
-  width: min(570px, 43vw);
+  width: min(510px, 38vw);
 }
 
 .orbital-hero-copy h1 {
   margin: 22px 0 26px;
-  font-family: var(--font-sans);
-  font-size: clamp(86px, 9vw, 152px);
-  font-weight: 560;
-  line-height: 0.75;
-  letter-spacing: -0.082em;
+  font-family: var(--serif);
+  font-size: clamp(100px, 10.4vw, 176px);
+  font-weight: 400;
+  line-height: 0.68;
+  letter-spacing: -0.075em;
 }
 
 .orbital-hero-copy h1::first-line {
@@ -192,19 +192,12 @@ body {
 }
 
 .orbital-intro {
-  max-width: 520px;
+  max-width: 475px;
   margin: auto 0 0;
   color: rgba(241, 234, 217, 0.78);
-  font-size: clamp(16px, 1.18vw, 19px);
-  line-height: 1.58;
-  letter-spacing: -0.018em;
-}
-
-.hero-status {
-  margin: 18px 0 0;
-  color: rgba(241, 234, 217, 0.46);
-  font: 8px var(--font-mono);
-  letter-spacing: 0.13em;
+  font-size: clamp(17px, 1.35vw, 22px);
+  line-height: 1.55;
+  letter-spacing: -0.025em;
 }
 
 .orbital-actions {
@@ -248,19 +241,19 @@ body {
   z-index: 4;
   right: max(45px, calc((100vw - 1460px) / 2 + 12px));
   bottom: 55px;
-  max-width: 330px;
+  max-width: 360px;
   margin: 0;
-  color: rgba(241, 234, 217, 0.5);
-  font: 8px/1.8 var(--font-mono);
-  letter-spacing: 0.1em;
+  color: rgba(241, 234, 217, 0.74);
+  font-family: var(--serif);
+  font-size: 20px;
+  line-height: 1.42;
   text-align: right;
 }
 
 .galaxy-caption span {
   display: block;
-  margin-bottom: 7px;
-  color: rgba(241, 234, 217, 0.82);
-  font-size: 11px;
+  margin-bottom: 10px;
+  font-size: 34px;
 }
 
 .hero-coordinate {
@@ -281,180 +274,6 @@ body {
 .hero-coordinate i {
   height: 1px;
   background: rgba(241, 234, 217, 0.2);
-}
-
-/* Compact homepage */
-.index-work {
-  padding: 125px 0 130px;
-  border-bottom: 1px solid var(--hairline);
-}
-
-.index-work > header {
-  display: grid;
-  grid-template-columns: 1fr minmax(280px, 0.45fr);
-  gap: clamp(55px, 9vw, 150px);
-  align-items: end;
-  margin-bottom: 65px;
-}
-
-.index-work > header h2 {
-  margin: 26px 0 0;
-  font-family: var(--font-sans);
-  font-size: clamp(54px, 6.2vw, 92px);
-  font-weight: 540;
-  line-height: 0.9;
-  letter-spacing: -0.075em;
-}
-
-.index-work > header > p {
-  margin: 0;
-  color: rgba(10, 10, 9, 0.6);
-  font-size: 15px;
-  line-height: 1.68;
-}
-
-.index-work-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.index-work-card {
-  overflow: hidden;
-  color: var(--ivory);
-  background: var(--ink);
-  border: 1px solid var(--ink);
-}
-
-.index-project-orbit {
-  position: relative;
-  min-height: 330px;
-  overflow: hidden;
-  background:
-    radial-gradient(circle at center, rgba(241, 234, 217, 0.11), transparent 30%),
-    linear-gradient(rgba(241, 234, 217, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(241, 234, 217, 0.035) 1px, transparent 1px);
-  background-size: auto, 44px 44px, 44px 44px;
-  border-bottom: 1px solid var(--hairline-light);
-}
-
-.index-project-orbit > strong {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 108px;
-  aspect-ratio: 1;
-  border: 1px solid rgba(241, 234, 217, 0.58);
-  border-radius: 50%;
-  background: var(--ink);
-  font: 9px var(--font-mono);
-  letter-spacing: 0.08em;
-  transform: translate(-50%, -50%);
-}
-
-.orbit-line {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  border: 1px solid rgba(241, 234, 217, 0.24);
-  border-radius: 50%;
-  transform: translate(-50%, -50%) rotate(-13deg);
-}
-
-.orbit-line-a {
-  width: 66%;
-  height: 35%;
-}
-
-.orbit-line-b {
-  width: 88%;
-  height: 58%;
-  border-style: dashed;
-  transform: translate(-50%, -50%) rotate(18deg);
-}
-
-.orbit-label {
-  position: absolute;
-  z-index: 4;
-  padding: 7px 10px;
-  border: 1px solid rgba(241, 234, 217, 0.35);
-  border-radius: 999px;
-  background: var(--ink);
-  font: 7px var(--font-mono);
-  letter-spacing: 0.08em;
-}
-
-.orbit-label-1 { top: 18%; left: 13%; }
-.orbit-label-2 { top: 17%; right: 11%; }
-.orbit-label-3 { right: 9%; bottom: 17%; }
-.orbit-label-4 { bottom: 16%; left: 11%; }
-
-.index-work-copy {
-  padding: 34px 34px 38px;
-}
-
-.index-work-copy > p:first-child {
-  margin: 0;
-  color: rgba(241, 234, 217, 0.44);
-  font: 7px var(--font-mono);
-  letter-spacing: 0.1em;
-}
-
-.index-work-copy h3 {
-  margin: 24px 0 18px;
-  font-family: var(--font-sans);
-  font-size: clamp(28px, 2.6vw, 40px);
-  font-weight: 520;
-  line-height: 1.02;
-  letter-spacing: -0.05em;
-}
-
-.index-work-copy > p:nth-of-type(2) {
-  min-height: 76px;
-  margin: 0;
-  color: rgba(241, 234, 217, 0.6);
-  font-size: 13px;
-  line-height: 1.65;
-}
-
-.index-work-copy > a {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
-  padding-top: 15px;
-  border-top: 1px solid var(--hairline-light);
-  font: 8px var(--font-mono);
-  letter-spacing: 0.1em;
-}
-
-.index-life {
-  display: flex;
-  justify-content: space-between;
-  gap: 50px;
-  align-items: center;
-  padding: 68px 0;
-}
-
-.index-life span {
-  color: rgba(10, 10, 9, 0.48);
-  font: 8px var(--font-mono);
-  letter-spacing: 0.11em;
-}
-
-.index-life p {
-  margin: 10px 0 0;
-  font-size: 17px;
-}
-
-.index-life > a {
-  flex: 0 0 auto;
-  padding-bottom: 8px;
-  border-bottom: 1px solid currentColor;
-  font: 8px var(--font-mono);
-  letter-spacing: 0.1em;
 }
 
 .editorial-intro {
@@ -1697,15 +1516,12 @@ body {
 
 @media (max-width: 1100px) {
   .orbital-hero-copy {
-    width: 48vw;
+    width: 44vw;
   }
 
   .galaxy-caption {
     max-width: 300px;
-  }
-
-  .index-work > header {
-    grid-template-columns: 1fr 0.55fr;
+    font-size: 17px;
   }
 
   .editorial-intro,
@@ -1825,21 +1641,14 @@ body {
 
   .orbital-hero-copy h1 {
     margin-top: 14px;
-    font-size: clamp(72px, 24vw, 104px);
-    line-height: 0.78;
+    font-size: clamp(82px, 28vw, 122px);
+    line-height: 0.72;
   }
 
   .orbital-intro {
-    max-width: 86%;
+    max-width: 78%;
     margin-top: 16px;
     font-size: 15px;
-  }
-
-  .hero-status {
-    max-width: 85%;
-    margin-top: 12px;
-    font-size: 6px;
-    line-height: 1.6;
   }
 
   .orbital-actions {
@@ -1857,10 +1666,11 @@ body {
     right: 20px;
     bottom: 68px;
     max-width: 270px;
+    font-size: 15px;
   }
 
   .galaxy-caption span {
-    font-size: 9px;
+    font-size: 27px;
   }
 
   .hero-coordinate {
@@ -1877,7 +1687,6 @@ body {
   .question-observatory,
   .life-preview,
   .home-closing,
-  .index-work,
   .work-index,
   .photo-archive,
   .about-story-grid,
@@ -1888,49 +1697,6 @@ body {
   .honest-status {
     padding-top: 90px;
     padding-bottom: 90px;
-  }
-
-  .index-work > header,
-  .index-work-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .index-work > header {
-    gap: 28px;
-    margin-bottom: 42px;
-  }
-
-  .index-work > header h2 {
-    font-size: 15vw;
-  }
-
-  .index-work-grid {
-    gap: 14px;
-  }
-
-  .index-project-orbit {
-    min-height: 280px;
-  }
-
-  .index-work-copy {
-    padding: 28px 22px 32px;
-  }
-
-  .index-work-copy h3 {
-    font-size: 9vw;
-  }
-
-  .index-work-copy > p:nth-of-type(2) {
-    min-height: 0;
-  }
-
-  .index-life {
-    align-items: flex-start;
-    padding: 50px 0;
-  }
-
-  .index-life p {
-    font-size: 14px;
   }
 
   .editorial-intro,

@@ -24,7 +24,7 @@ export const projects: Project[] = [
     question:
       "When does structured knowledge add something that semantic retrieval alone cannot?",
     role: "WORKFLOW · GRAPH · BACKEND · DEPLOYMENT",
-    tags: ["DIFY", "POSTGRESQL", "APACHE AGE", "RAG", "LLM"],
+    tags: ["DIFY", "RAG", "APACHE AGE", "POSTGRESQL", "LLM"],
     featured: true,
     order: 1,
   },
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     question:
       "Can parameter-efficient adaptation make a 9B language model reliably produce a strict structured output?",
     role: "MODEL SELECTION · TRAINING · PROMPT ITERATION",
-    tags: ["GLM-4-9B", "LORA", "MS-SWIFT", "PYTORCH", "CHINESE NLP"],
+    tags: ["GLM-4-9B", "LORA", "MS-SWIFT", "CHINESE NLP"],
     featured: false,
     order: 2,
   },
