@@ -15,16 +15,16 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "ai-teaching-assistant",
-    title: "Knowledge-Enhanced AI Teaching Assistant",
+    title: "AI Teaching Assistant System Based on RAG & Domain Knowledge Graph",
     year: "2025",
-    category: "LLM SYSTEM / RAG + KNOWLEDGE GRAPH",
+    category: "BACHELOR THESIS / RAG + DOMAIN KG + BKT",
     status: "TEAM SYSTEM · COMPLETED",
     summary:
-      "A domain AI teaching assistant combining retrieval-augmented generation with graph context to produce grounded, traceable answers over course knowledge.",
+      "A bachelor-thesis system integrating RAG, a domain knowledge graph and Bayesian Knowledge Tracing for course-grounded question answering and learner-state support.",
     question:
       "When does structured knowledge add something that semantic retrieval alone cannot?",
     role: "WORKFLOW · GRAPH · BACKEND · DEPLOYMENT",
-    tags: ["DIFY", "RAG", "APACHE AGE", "POSTGRESQL", "LLM"],
+    tags: ["RAG", "DOMAIN KG", "BKT", "DIFY", "POSTGRESQL", "APACHE AGE"],
     featured: true,
     order: 1,
   },

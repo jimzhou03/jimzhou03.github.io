@@ -1,70 +1,58 @@
 import Link from "next/link";
-import LanguageGalaxy from "./LanguageGalaxy";
 import SiteFrame from "./components/SiteFrame";
+import GravityField from "./GravityField";
+import { projects } from "../content/projects";
 
 export default function Home() {
   return (
     <SiteFrame active="index">
-      <section className="orbital-hero">
-        <LanguageGalaxy />
-
-        <div className="orbital-hero-meta">
-          <span>INDEX / 01</span>
-          <span>NATURAL LANGUAGE PROCESSING · LARGE LANGUAGE MODELS</span>
-        </div>
-
-        <div className="orbital-hero-copy">
-          <p className="eyebrow">HELLO, I&apos;M</p>
-          <h1>Weijie<br />Zhou</h1>
-          <p className="orbital-intro">
-            I build and study retrieval- and knowledge-enhanced language-model
-            systems, with a focus on RAG, knowledge graphs and applied NLP.
+      <section className="gravity-home" aria-labelledby="home-title">
+        <div className="gravity-copy">
+          <span className="gravity-kicker">NLP · LARGE LANGUAGE MODELS</span>
+          <h1 id="home-title">
+            Building<br />
+            language systems<br />
+            with <em>context.</em>
+          </h1>
+          <div className="gravity-rule" />
+          <h2>Weijie Zhou — NLP &amp; Large Language Models</h2>
+          <p>
+            I build retrieval- and knowledge-enhanced language systems that
+            connect models with evidence, structured knowledge and evaluation.
           </p>
-          <div className="orbital-actions">
-            <Link href="/projects">EXPLORE WORK <span>↗</span></Link>
-            <Link href="/about">ABOUT ME <span>→</span></Link>
+          <div className="gravity-education">
+            <span>B.Eng. · Intelligent Science &amp; Technology · Top 10%</span>
+            <span>
+              Incoming M.A. · Computational Linguistics
+              <br />
+              Heidelberg University · October 2026
+            </span>
           </div>
+          <Link className="gravity-cta" href="/projects">
+            EXPLORE PROJECTS <span>→</span>
+          </Link>
         </div>
-
-        <p className="galaxy-caption">
-          <span>智能</span>
-          Language models do not work in isolation.<br />
-          Context, evidence and structure shape the answer.
-        </p>
-
-        <div className="hero-coordinate">
-          <span>CONTEXT / 上下文</span>
-          <i />
-          <small>MOVE THE CURSOR TO SHIFT THE FIELD</small>
-        </div>
+        <GravityField />
       </section>
 
-      <section className="home-profile" aria-labelledby="profile-title">
-        <div className="home-profile-heading">
-          <span>01 / PROFILE</span>
-          <h2 id="profile-title">NLP systems,<br /><em>from China to Heidelberg.</em></h2>
-        </div>
-
-        <div className="home-profile-intro">
-          <p>
-            I am Zhou Weijie, focused on natural language processing and
-            large language-model systems.
-          </p>
-          <Link href="/about">MORE ABOUT ME <span>↗</span></Link>
-        </div>
-
-        <div className="education-ledger">
-          <article>
-            <span>01 / BACHELOR</span>
-            <h3>B.Eng. in Intelligent<br />Science and Technology</h3>
-            <p>Top 10% · China</p>
+      <section className="gravity-projects" aria-label="Selected projects">
+        {projects.map((project, index) => (
+          <article className="gravity-project-row" key={project.slug}>
+            <span className="gravity-project-number">0{index + 1}</span>
+            <div className="gravity-project-title">
+              <h2>{project.title}</h2>
+            </div>
+            <p>{project.summary}</p>
+            <div className="gravity-tech-orbit" aria-label={`${project.title} technologies`}>
+              {project.tags.slice(0, 4).map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+            <Link href={`/projects/${project.slug}`} aria-label={`View ${project.title}`}>
+              →
+            </Link>
           </article>
-          <article>
-            <span>02 / MASTER</span>
-            <h3>M.A. in Computational<br />Linguistics</h3>
-            <p>Heidelberg University · October 2026</p>
-          </article>
-        </div>
+        ))}
       </section>
     </SiteFrame>
   );

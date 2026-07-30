@@ -54,7 +54,6 @@ export default function ParticleField() {
             ".work-window",
             ".photo-archive-entry",
             ".about-minimal-grid > *",
-            ".about-contact-line",
             ".case-editorial-grid > *",
             ".system-route article",
             ".evaluation-panel article",

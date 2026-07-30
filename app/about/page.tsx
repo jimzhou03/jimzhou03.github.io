@@ -14,13 +14,21 @@ export default function AboutPage() {
           <h1 id="about-title">About<br /><em>me.</em></h1>
           <div className="about-minimal-copy">
             <p>
-              I like turning broad questions about language models into systems
-              that can be tested: what was retrieved, which evidence shaped the
-              answer, and where the system still fails.
+              I&apos;m Weijie Zhou, an incoming M.A. student in Computational
+              Linguistics at Heidelberg University. I want to keep exploring
+              NLP and large language models, especially systems that can
+              remember and reason across time.
             </p>
             <p>
-              My current work sits between retrieval, structured knowledge and
-              parameter-efficient model adaptation.
+              The idea that draws me in is persistent context: software that
+              can preserve a growing record of knowledge, experience and
+              perspective instead of starting every interaction from zero. The
+              speculative version is a form of <em>cyber immortality.</em>
+            </p>
+            <p>
+              I don&apos;t pretend to have everything figured out. I&apos;m
+              still learning how to form my own judgments, test them against
+              evidence and change my mind when a better answer appears.
             </p>
           </div>
         </div>

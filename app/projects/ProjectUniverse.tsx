@@ -15,17 +15,13 @@ type HaloWord = {
 const projectWords: Record<string, string[]> = {
   "ai-teaching-assistant": [
     "RAG",
-    "KNOWLEDGE GRAPH",
+    "DOMAIN KG",
+    "BKT",
     "DIFY",
     "APACHE AGE",
     "POSTGRESQL",
-    "LLM",
     "RETRIEVAL",
     "EVIDENCE",
-    "GLM-4-9B",
-    "LORA",
-    "CCL25",
-    "EVALUATION",
   ],
   "ccl25-hate-speech": [
     "GLM-4-9B",
@@ -36,35 +32,16 @@ const projectWords: Record<string, string[]> = {
     "EVALUATION",
     "SFT",
     "STRUCTURED OUTPUT",
-    "RAG",
-    "DIFY",
-    "KNOWLEDGE GRAPH",
-    "APACHE AGE",
   ],
 };
 
-const fallbackPlacement = [
-  { left: "18%", top: "38%", scale: 1.9 },
-  { left: "14%", top: "61%", scale: 1.2 },
-  { left: "69%", top: "29%", scale: 1.45 },
-  { left: "29%", top: "75%", scale: 0.85 },
-  { left: "75%", top: "69%", scale: 0.9 },
-  { left: "79%", top: "46%", scale: 1.65 },
-  { left: "27%", top: "29%", scale: 0.8 },
-  { left: "70%", top: "58%", scale: 1 },
-  { left: "61%", top: "20%", scale: 0.78 },
-  { left: "63%", top: "79%", scale: 0.88 },
-  { left: "82%", top: "35%", scale: 0.72 },
-  { left: "38%", top: "23%", scale: 0.76 },
-];
-
 function buildHalo(words: string[]): HaloWord[] {
-  return Array.from({ length: 42 }, (_, index) => ({
+  return Array.from({ length: words.length }, (_, index) => ({
     label: words[index % words.length],
     orbit: index % 3,
-    phase: (index / 42) * Math.PI * 2 + (index % 4) * 0.22,
-    size: index % 11 === 0 ? 2.08 : index % 7 === 0 ? 1.5 : index % 3 === 0 ? 1.08 : 0.72,
-    speed: index % 2 === 0 ? 1 : -0.72,
+    phase: (index / words.length) * Math.PI * 2 + (index % 3) * 0.18,
+    size: index % 6 === 0 ? 1.32 : index % 3 === 0 ? 1.08 : 0.84,
+    speed: index % 2 === 0 ? 1 : -0.76,
   }));
 }
 
@@ -129,7 +106,7 @@ export default function ProjectUniverse() {
       const x = Math.cos(angle) * planetRadius * orbitScale;
       const y = Math.sin(angle) * planetRadius * verticalScale;
       const perspective = 0.72 + (depth + 1) * 0.24;
-      const fontSize = Math.max(8, planetRadius * 0.105 * word.size * perspective);
+      const fontSize = Math.max(13, planetRadius * 0.095 * word.size * perspective);
       const alpha = drawFront ? 0.43 + depth * 0.36 : 0.19 + (depth + 1) * 0.1;
       context.font = `${word.size > 1.3 ? 400 : 500} ${fontSize}px ${
         word.size > 1.3 ? 'Georgia, "Times New Roman", serif' : '"Courier New", monospace'
@@ -156,15 +133,24 @@ export default function ProjectUniverse() {
       context.clip();
 
       if (texture.complete && texture.naturalWidth > 0) {
-        const textureHeight = radius * 2;
-        const textureWidth = textureHeight * (texture.naturalWidth / texture.naturalHeight);
-        const drift = reducedMotion ? textureWidth * 0.12 : (frame * 0.18) % textureWidth;
-        let x = centerX - radius - drift;
-        while (x > centerX - radius) x -= textureWidth;
-        while (x < centerX + radius) {
-          context.drawImage(texture, x, centerY - radius, textureWidth, textureHeight);
-          x += textureWidth;
-        }
+        const sourceSize = Math.min(texture.naturalWidth, texture.naturalHeight);
+        const sourceX = (texture.naturalWidth - sourceSize) / 2;
+        const sourceY = (texture.naturalHeight - sourceSize) / 2;
+        context.save();
+        context.translate(centerX, centerY);
+        context.rotate(reducedMotion ? 0 : frame * 0.00022);
+        context.drawImage(
+          texture,
+          sourceX,
+          sourceY,
+          sourceSize,
+          sourceSize,
+          -radius * 1.04,
+          -radius * 1.04,
+          radius * 2.08,
+          radius * 2.08,
+        );
+        context.restore();
       } else {
         context.fillStyle = "#c8c0ae";
         context.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
@@ -318,20 +304,6 @@ export default function ProjectUniverse() {
         </div>
 
         <div className="project-halo-stage">
-          <div className="project-word-fallback" aria-hidden="true">
-            {projectWords[activeProject.slug].map((word, index) => (
-              <span
-                key={`${word}-${index}`}
-                style={{
-                  left: fallbackPlacement[index].left,
-                  top: fallbackPlacement[index].top,
-                  fontSize: `${fallbackPlacement[index].scale}rem`,
-                }}
-              >
-                {word}
-              </span>
-            ))}
-          </div>
           {/* The raster layer keeps the visual present while the animated canvas initializes. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="project-planet-fallback" src="/planet-surface.png" alt="" aria-hidden="true" />
