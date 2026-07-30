@@ -10,15 +10,37 @@ export default function Home() {
         <div className="gravity-copy">
           <span className="gravity-kicker">NLP · LARGE LANGUAGE MODELS</span>
           <h1 id="home-title">
-            Building<br />
-            language systems<br />
-            with <em>context.</em>
+            <span className="gravity-pull gravity-pull-soft" data-text="Building">
+              Building
+            </span>
+            <br />
+            language{" "}
+            <span className="gravity-pull gravity-pull-medium" data-text="systems">
+              systems
+            </span>
+            <br />
+            with{" "}
+            <em className="gravity-pull gravity-pull-strong" data-text="context.">
+              context.
+            </em>
           </h1>
           <div className="gravity-rule" />
-          <h2>Weijie Zhou — NLP &amp; Large Language Models</h2>
+          <h2>
+            Weijie Zhou — NLP &amp; Large Language{" "}
+            <span className="gravity-pull-inline" data-text="Models">
+              Models
+            </span>
+          </h2>
           <p>
-            I build retrieval- and knowledge-enhanced language systems that
-            connect models with evidence, structured knowledge and evaluation.
+            I build retrieval- and{" "}
+            <span className="gravity-pull-inline" data-text="knowledge-enhanced">
+              knowledge-enhanced
+            </span>{" "}
+            <span className="gravity-pull-inline gravity-pull-inline-strong" data-text="language systems">
+              language systems
+            </span>{" "}
+            that connect models with evidence, structured knowledge and
+            evaluation.
           </p>
           <div className="gravity-education">
             <span>B.Eng. · Intelligent Science &amp; Technology · Top 10%</span>

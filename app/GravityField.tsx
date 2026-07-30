@@ -10,6 +10,20 @@ type Particle = {
   size: number;
   alpha: number;
   lane: number;
+  baseSpeed: number;
+  stretch: number;
+};
+
+type GravityToken = {
+  label: string;
+  x: number;
+  y: number;
+  baseY: number;
+  size: number;
+  alpha: number;
+  lane: number;
+  index: number;
+  baseSpeed: number;
 };
 
 const languageTokens = [
@@ -21,49 +35,66 @@ const languageTokens = [
   "context",
   "token",
   "evidence",
-];
-
-const tokenPositions = [
-  { x: 0.28, y: 0.24 },
-  { x: 0.48, y: 0.16 },
-  { x: 0.24, y: 0.49 },
-  { x: 0.49, y: 0.42 },
-  { x: 0.36, y: 0.76 },
-  { x: 0.64, y: 0.29 },
-  { x: 0.6, y: 0.62 },
-  { x: 0.72, y: 0.78 },
+  "retrieval",
+  "RAG",
 ];
 
 export default function GravityField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const planetRef = useRef<HTMLImageElement>(null);
+  const eventHorizonRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const planet = planetRef.current;
+    const eventHorizon = eventHorizonRef.current;
     const stage = canvas?.parentElement;
-    if (!canvas || !planet || !stage) return;
+    if (!canvas || !eventHorizon || !stage) return;
     const context = canvas.getContext("2d");
     if (!context) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const pointer = { x: 0, y: 0, active: false };
+    const pointer = { x: -1000, y: -1000, active: false };
     let width = 0;
     let height = 0;
     let frame = 0;
     let animationFrame = 0;
     let inViewport = true;
     let particles: Particle[] = [];
-    let planetGeometry = { x: 0, y: 0, radius: 0 };
+    let tokens: GravityToken[] = [];
+    let blackHole = { x: 0, y: 0, radius: 0, influence: 0 };
 
-    const resetParticle = (particle: Particle, randomX = false) => {
-      particle.x = randomX ? Math.random() * width * 0.78 : width * (0.04 + Math.random() * 0.12);
-      particle.y = height * (0.12 + Math.random() * 0.76);
-      particle.vx = 0.14 + Math.random() * 0.28;
-      particle.vy = (Math.random() - 0.5) * 0.08;
-      particle.size = Math.random() > 0.86 ? 1.9 : 0.55 + Math.random() * 0.75;
-      particle.alpha = 0.2 + Math.random() * 0.5;
-      particle.lane = Math.floor(Math.random() * 5);
+    const streamY = (lane: number, lanes: number) =>
+      height * (0.11 + (lane / Math.max(1, lanes - 1)) * 0.78);
+
+    const resetParticle = (particle: Particle, firstPass = false) => {
+      particle.x = firstPass ? Math.random() * width * 0.86 : -16 - Math.random() * width * 0.22;
+      particle.lane = Math.floor(Math.random() * 11);
+      particle.y = streamY(particle.lane, 11) + (Math.random() - 0.5) * height * 0.07;
+      const scaleRoll = Math.random();
+      particle.size =
+        scaleRoll > 0.975
+          ? 5.2 + Math.random() * 3.2
+          : scaleRoll > 0.87
+            ? 2.1 + Math.random() * 2.7
+            : scaleRoll > 0.48
+              ? 0.9 + Math.random() * 1.35
+              : 0.32 + Math.random() * 0.7;
+      particle.stretch = 0.72 + Math.random() * 0.8;
+      particle.baseSpeed = 0.28 + Math.random() * 0.58 + particle.size * 0.012;
+      particle.vx = particle.baseSpeed;
+      particle.vy = (Math.random() - 0.5) * 0.035;
+      particle.alpha = 0.18 + Math.random() * 0.66;
+    };
+
+    const resetToken = (token: GravityToken, firstPass = false) => {
+      token.lane = token.index % 5;
+      token.x = firstPass
+        ? width * (0.08 + ((token.index * 0.137) % 0.52))
+        : -70 - Math.random() * width * 0.75;
+      token.baseY = streamY(token.lane, 5) + (token.index % 2 ? 13 : -10);
+      token.y = token.baseY;
+      token.baseSpeed = 0.18 + (token.index % 3) * 0.035;
+      token.alpha = token.index < 5 ? 0.76 : 0.54;
+      token.size = token.index < 5 ? 20 : 15;
     };
 
     const resize = () => {
@@ -77,117 +108,237 @@ export default function GravityField() {
       canvas.style.height = `${height}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-      const planetBounds = planet.getBoundingClientRect();
-      planetGeometry = {
-        x: planetBounds.left - bounds.left + planetBounds.width / 2,
-        y: planetBounds.top - bounds.top + planetBounds.height / 2,
-        radius: planetBounds.width / 2,
+      const horizonBounds = eventHorizon.getBoundingClientRect();
+      blackHole = {
+        x: horizonBounds.left - bounds.left + horizonBounds.width / 2,
+        y: horizonBounds.top - bounds.top + horizonBounds.height / 2,
+        radius: horizonBounds.width / 2,
+        influence: Math.max(horizonBounds.width * 2.65, Math.min(width, height) * 0.58),
       };
 
-      particles = Array.from({ length: width < 700 ? 58 : 112 }, () => {
+      particles = Array.from({ length: width < 700 ? 138 : 286 }, () => {
         const particle = {} as Particle;
         resetParticle(particle, true);
         return particle;
       });
 
+      tokens = languageTokens.map((label, index) => {
+        const token = { label, index } as GravityToken;
+        resetToken(token, true);
+        return token;
+      });
+
       if (reducedMotion || !animationFrame) draw();
+    };
+
+    const drawDistortedStream = () => {
+      const leftEdge = Math.max(0, blackHole.x - blackHole.influence * 0.9);
+      const rightEdge = Math.min(width, blackHole.x + blackHole.influence * 0.82);
+
+      context.save();
+      context.lineWidth = 0.55;
+      for (let lane = 0; lane < 9; lane += 1) {
+        const y = streamY(lane, 9);
+        const side = y <= blackHole.y ? -1 : 1;
+        const separation = Math.max(
+          blackHole.radius * 1.22,
+          Math.abs(y - blackHole.y) * 0.58 + blackHole.radius * 0.74,
+        );
+        const lensY = blackHole.y + side * separation;
+
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(leftEdge, y);
+        context.bezierCurveTo(
+          blackHole.x - blackHole.radius * 2.2,
+          y,
+          blackHole.x - blackHole.radius * 1.42,
+          lensY,
+          blackHole.x - blackHole.radius * 1.04,
+          lensY,
+        );
+        context.strokeStyle = `rgba(10,10,9,${0.035 + (lane % 3) * 0.012})`;
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(blackHole.x + blackHole.radius * 1.04, lensY);
+        context.bezierCurveTo(
+          blackHole.x + blackHole.radius * 1.46,
+          lensY,
+          blackHole.x + blackHole.radius * 2.08,
+          y,
+          rightEdge,
+          y,
+        );
+        context.lineTo(width, y);
+        context.stroke();
+      }
+      context.restore();
+    };
+
+    const applyPointerRepulsion = (particle: Particle, range = 145, strength = 0.15) => {
+      if (!pointer.active) return;
+      const dx = particle.x - pointer.x;
+      const dy = particle.y - pointer.y;
+      const distance = Math.max(18, Math.hypot(dx, dy));
+      if (distance >= range) return;
+      const repel = (1 - distance / range) * strength;
+      particle.vx += (dx / distance) * repel;
+      particle.vy += (dy / distance) * repel;
+    };
+
+    const drawParticles = () => {
+      particles.forEach((particle, index) => {
+        const dx = blackHole.x - particle.x;
+        const dy = blackHole.y - particle.y;
+        const distance = Math.max(8, Math.hypot(dx, dy));
+        const field = distance < blackHole.influence ? 1 - distance / blackHole.influence : 0;
+        const gravity = field * field * 0.052;
+        const swirl = field * field * 0.016;
+        const laneWave = Math.sin(frame * 0.008 + particle.lane * 0.84 + index * 0.05);
+
+        particle.vx += (particle.baseSpeed - particle.vx) * 0.018;
+        particle.vy += laneWave * 0.0008;
+        particle.vx += (dx / distance) * gravity + (-dy / distance) * swirl;
+        particle.vy += (dy / distance) * gravity + (dx / distance) * swirl;
+        applyPointerRepulsion(particle);
+        particle.vx *= 0.993;
+        particle.vy *= 0.991;
+
+        const speed = Math.hypot(particle.vx, particle.vy);
+        const maxSpeed = 3.8;
+        if (speed > maxSpeed) {
+          particle.vx = (particle.vx / speed) * maxSpeed;
+          particle.vy = (particle.vy / speed) * maxSpeed;
+        }
+
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        const nextDistance = Math.hypot(blackHole.x - particle.x, blackHole.y - particle.y);
+        if (
+          nextDistance < blackHole.radius * 0.82 ||
+          particle.x > width + 38 ||
+          particle.y < -36 ||
+          particle.y > height + 36
+        ) {
+          resetParticle(particle);
+          return;
+        }
+
+        const nearHorizon = nextDistance < blackHole.radius * 1.36;
+        const trailLength = Math.min(30, 7 + Math.hypot(particle.vx, particle.vy) * 7);
+        const particleColor = nearHorizon ? "242,239,231" : "10,10,9";
+        const fade =
+          nextDistance < blackHole.radius * 1.08
+            ? Math.max(0, (nextDistance - blackHole.radius * 0.82) / (blackHole.radius * 0.26))
+            : 1;
+
+        context.strokeStyle = `rgba(${particleColor},${particle.alpha * 0.18 * fade})`;
+        context.lineWidth = nearHorizon ? 0.85 : 0.5;
+        context.beginPath();
+        context.moveTo(
+          particle.x - particle.vx * trailLength,
+          particle.y - particle.vy * trailLength,
+        );
+        context.lineTo(particle.x, particle.y);
+        context.stroke();
+
+        context.fillStyle = `rgba(${particleColor},${particle.alpha * fade})`;
+        context.save();
+        context.translate(particle.x, particle.y);
+        context.rotate(Math.atan2(particle.vy, particle.vx));
+        context.beginPath();
+        context.ellipse(
+          0,
+          0,
+          particle.size * particle.stretch,
+          particle.size,
+          0,
+          0,
+          Math.PI * 2,
+        );
+        context.fill();
+        if (particle.size > 3.4) {
+          context.strokeStyle = `rgba(${particleColor},${particle.alpha * 0.28 * fade})`;
+          context.lineWidth = 0.65;
+          context.beginPath();
+          context.arc(
+            -particle.size * 0.18,
+            -particle.size * 0.12,
+            particle.size * 0.28,
+            0,
+            Math.PI * 2,
+          );
+          context.stroke();
+        }
+        context.restore();
+      });
+    };
+
+    const drawTokens = () => {
+      tokens.forEach((token) => {
+        const fieldStart = blackHole.x - blackHole.influence * 0.9;
+        const fieldLength = Math.max(1, blackHole.x - fieldStart);
+        const field = Math.max(0, Math.min(1, (token.x - fieldStart) / fieldLength));
+        const absorbStart = blackHole.x - blackHole.radius * 2.05;
+        const absorbEnd = blackHole.x - blackHole.radius * 0.72;
+        const absorb = Math.max(
+          0,
+          Math.min(1, (token.x - absorbStart) / Math.max(1, absorbEnd - absorbStart)),
+        );
+
+        token.x += token.baseSpeed * (1 + field * 2.2);
+        const targetY = token.baseY + (blackHole.y - token.baseY) * Math.pow(field, 2.35);
+        token.y += (targetY - token.y) * (0.014 + field * 0.075);
+
+        if (token.x >= absorbEnd || token.y < 30 || token.y > height - 30) {
+          resetToken(token);
+          return;
+        }
+
+        if (token.x < 48) return;
+        const fade = 1 - Math.pow(absorb, 1.55);
+        const stretch = 1 + absorb * 1.25;
+        const font = `${token.index < 5 ? 500 : 450} ${token.size}px ${
+          token.index < 5 ? '"Songti SC", "SimSun", Georgia, serif' : 'Arial, sans-serif'
+        }`;
+
+        context.save();
+        context.translate(token.x, token.y);
+        context.scale(stretch, Math.max(0.7, 1 - absorb * 0.28));
+        context.font = font;
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        if (absorb > 0.12) {
+          [3, 2, 1].forEach((ghost) => {
+            context.fillStyle = `rgba(10,10,9,${token.alpha * fade * (0.045 * ghost)})`;
+            context.fillText(token.label, -ghost * absorb * 9, 0);
+          });
+        }
+        context.fillStyle = `rgba(10,10,9,${token.alpha * fade})`;
+        context.fillText(token.label, 0, 0);
+        context.restore();
+      });
+    };
+
+    const drawPointerField = () => {
+      if (!pointer.active) return;
+      context.beginPath();
+      context.arc(pointer.x, pointer.y, 27, 0, Math.PI * 2);
+      context.strokeStyle = "rgba(10,10,9,.34)";
+      context.lineWidth = 0.65;
+      context.stroke();
     };
 
     const draw = () => {
       animationFrame = 0;
       frame += 1;
       context.clearRect(0, 0, width, height);
-
-      const planetX = width * 1.03;
-      const planetY = height * 0.48;
-      const orbitRadius = Math.min(width * 0.54, height * 0.66);
-
-      particles.forEach((particle, index) => {
-        const dx = planetX - particle.x;
-        const dy = planetY - particle.y;
-        const distance = Math.max(80, Math.hypot(dx, dy));
-        const gravity = Math.min(0.016, 2.7 / distance);
-        const laneWave = Math.sin(frame * 0.006 + particle.lane * 1.27 + index * 0.08);
-
-        particle.vx += (dx / distance) * gravity;
-        particle.vy += (dy / distance) * gravity + laneWave * 0.0015;
-
-        if (pointer.active) {
-          const pdx = particle.x - pointer.x;
-          const pdy = particle.y - pointer.y;
-          const pointerDistance = Math.max(24, Math.hypot(pdx, pdy));
-          if (pointerDistance < 150) {
-            const repel = (1 - pointerDistance / 150) * 0.12;
-            particle.vx += (pdx / pointerDistance) * repel;
-            particle.vy += (pdy / pointerDistance) * repel;
-          }
-        }
-
-        particle.vx *= 0.994;
-        particle.vy *= 0.994;
-        particle.x += particle.vx;
-        particle.y += particle.vy;
-
-        if (
-          particle.x > width * 0.92 ||
-          particle.y < -40 ||
-          particle.y > height + 40 ||
-          Math.hypot(planetX - particle.x, planetY - particle.y) < orbitRadius * 0.32
-        ) {
-          resetParticle(particle);
-        }
-
-        const trail = 12 + particle.size * 8;
-        context.strokeStyle = `rgba(10,10,9,${particle.alpha * 0.12})`;
-        context.lineWidth = 0.55;
-        context.beginPath();
-        context.moveTo(particle.x - particle.vx * trail, particle.y - particle.vy * trail);
-        context.quadraticCurveTo(
-          particle.x - particle.vx * trail * 0.35,
-          particle.y - particle.vy * trail * 0.35 + laneWave * 6,
-          particle.x,
-          particle.y,
-        );
-        context.stroke();
-
-        context.fillStyle = `rgba(10,10,9,${particle.alpha})`;
-        context.beginPath();
-        context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        context.fill();
-      });
-
-      languageTokens.forEach((token, index) => {
-        const position = tokenPositions[index];
-        const floatX = Math.sin(frame * 0.0025 + index * 1.2) * 9;
-        const floatY = Math.cos(frame * 0.002 + index) * 7;
-        const x = width * position.x + floatX;
-        const y = height * position.y + floatY;
-        const pointerShiftX = pointer.active ? (pointer.x - width / 2) * 0.012 : 0;
-        const pointerShiftY = pointer.active ? (pointer.y - height / 2) * 0.008 : 0;
-        const drawX = x + pointerShiftX;
-        const drawY = y + pointerShiftY;
-        const overPlanet =
-          Math.hypot(drawX - planetGeometry.x, drawY - planetGeometry.y) <
-          planetGeometry.radius * 0.96;
-
-        context.font = `${index < 5 ? 500 : 450} ${index < 5 ? 18 : 15}px ${
-          index < 5 ? '"Songti SC", "SimSun", Georgia, serif' : 'Arial, sans-serif'
-        }`;
-        context.textAlign = "center";
-        context.textBaseline = "middle";
-
-        if (overPlanet) {
-          context.lineJoin = "round";
-          context.lineWidth = 3;
-          context.strokeStyle = "rgba(10,10,9,.62)";
-          context.strokeText(token, drawX, drawY);
-          context.fillStyle = `rgba(242,239,231,${index < 5 ? 0.9 : 0.76})`;
-        } else {
-          context.fillStyle = `rgba(10,10,9,${index < 5 ? 0.72 : 0.56})`;
-        }
-
-        context.fillText(token, drawX, drawY);
-      });
+      drawDistortedStream();
+      drawParticles();
+      drawTokens();
+      drawPointerField();
 
       if (!reducedMotion && !document.hidden && inViewport) {
         animationFrame = window.requestAnimationFrame(draw);
@@ -206,6 +357,7 @@ export default function GravityField() {
       pointer.y = event.clientY - bounds.top;
       pointer.active = true;
     };
+
     const clearPointer = () => {
       pointer.active = false;
     };
@@ -252,9 +404,16 @@ export default function GravityField() {
 
   return (
     <div className="gravity-visual" aria-hidden="true">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img ref={planetRef} className="gravity-planet" src="/planet-surface.webp" alt="" />
+      <div className="gravity-black-hole">
+        <span className="gravity-lensing-ring" />
+        <span className="gravity-accretion gravity-accretion-outer" />
+        <span className="gravity-accretion gravity-accretion-inner" />
+        <span ref={eventHorizonRef} className="gravity-event-horizon" />
+      </div>
       <canvas ref={canvasRef} className="gravity-canvas" />
+      <span className="gravity-interaction-hint">
+        LEFT → RIGHT · MOVE CURSOR TO SCATTER THE STREAM
+      </span>
     </div>
   );
 }

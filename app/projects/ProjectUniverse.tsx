@@ -48,7 +48,12 @@ function buildHalo(words: string[]): HaloWord[] {
 export default function ProjectUniverse() {
   const [activeIndex, setActiveIndex] = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const haloRef = useRef(buildHalo(projectWords[projects[0].slug]));
   const activeProject = projects[activeIndex];
+
+  useEffect(() => {
+    haloRef.current = buildHalo(projectWords[activeProject.slug]);
+  }, [activeProject.slug]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -69,8 +74,6 @@ export default function ProjectUniverse() {
     let inViewport = true;
     let redraw = () => {};
     let stars: Array<{ x: number; y: number; radius: number; alpha: number }> = [];
-    const halo = buildHalo(projectWords[activeProject.slug]);
-
     const resize = () => {
       const bounds = wrapper.getBoundingClientRect();
       const ratio = Math.min(window.devicePixelRatio || 1, 1.75);
@@ -224,7 +227,7 @@ export default function ProjectUniverse() {
       });
       context.restore();
 
-      halo.forEach((word) => drawWord(word, centerX, centerY, radius, false));
+      haloRef.current.forEach((word) => drawWord(word, centerX, centerY, radius, false));
 
       const glow = context.createRadialGradient(centerX, centerY, radius * 0.65, centerX, centerY, radius * 1.8);
       glow.addColorStop(0, "rgba(241,234,217,.12)");
@@ -235,7 +238,7 @@ export default function ProjectUniverse() {
       context.fill();
 
       drawPlanet(centerX, centerY, radius);
-      halo.forEach((word) => drawWord(word, centerX, centerY, radius, true));
+      haloRef.current.forEach((word) => drawWord(word, centerX, centerY, radius, true));
 
       if (!reducedMotion && !document.hidden && inViewport) {
         animationFrame = window.requestAnimationFrame(draw);
@@ -299,7 +302,7 @@ export default function ProjectUniverse() {
       wrapper.removeEventListener("pointerleave", resetPointer);
       document.removeEventListener("visibilitychange", handleVisibility);
     };
-  }, [activeProject.slug]);
+  }, []);
 
   return (
     <section className="project-universe" aria-label="Selected work">
@@ -312,7 +315,11 @@ export default function ProjectUniverse() {
         <div className="project-universe-index">
           <div className="project-universe-list">
             {projects.map((project, index) => (
-              <article className={activeIndex === index ? "active" : ""} key={project.slug}>
+              <article
+                className={activeIndex === index ? "active" : ""}
+                key={project.slug}
+                onPointerEnter={() => setActiveIndex(index)}
+              >
                 <button type="button" onClick={() => setActiveIndex(index)} aria-pressed={activeIndex === index}>
                   <span>0{index + 1}</span>
                   <h2>{project.title}</h2>
@@ -328,9 +335,6 @@ export default function ProjectUniverse() {
         </div>
 
         <div className="project-halo-stage">
-          {/* The raster layer keeps the visual present while the animated canvas initializes. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="project-planet-fallback" src="/planet-surface.webp" alt="" aria-hidden="true" />
           <canvas ref={canvasRef} className="project-halo-canvas" aria-hidden="true" />
           <p className="project-halo-caption">
             SELECT A PROJECT TO SHIFT THE FIELD

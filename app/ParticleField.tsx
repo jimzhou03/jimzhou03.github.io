@@ -177,7 +177,7 @@ export default function ParticleField() {
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
-      drifters = Array.from({ length: width < 720 ? 16 : 28 }, (_, index) => {
+      drifters = Array.from({ length: width < 720 ? 24 : 42 }, (_, index) => {
         const x = Math.random() * width;
         const y = Math.random() * height;
         return {
