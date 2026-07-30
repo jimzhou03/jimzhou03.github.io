@@ -3,6 +3,7 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { SplitText } from "gsap/SplitText";
 
 type Drifter = {
   x: number;
@@ -18,11 +19,71 @@ export default function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useLayoutEffect(() => {
-    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger, SplitText);
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reducedMotion) return;
 
+    let titleSplit: SplitText | null = null;
     const scope = gsap.context(() => {
+      const gravityTitle = document.querySelector<HTMLElement>(".gravity-copy h1");
+      if (gravityTitle) {
+        titleSplit = new SplitText(gravityTitle, {
+          type: "lines,words",
+          linesClass: "gravity-title-line",
+        });
+
+        gsap.from(titleSplit.words, {
+          yPercent: 112,
+          opacity: 0,
+          duration: 1.05,
+          stagger: 0.045,
+          ease: "power4.out",
+        });
+
+        gsap.from(
+          [
+            ".gravity-kicker",
+            ".gravity-rule",
+            ".gravity-copy h2",
+            ".gravity-copy > p",
+            ".gravity-education",
+            ".gravity-cta",
+          ],
+          {
+            y: 18,
+            opacity: 0,
+            duration: 0.75,
+            stagger: 0.055,
+            delay: 0.22,
+            ease: "power3.out",
+          },
+        );
+
+        gsap.to(".gravity-copy", {
+          y: 30,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".gravity-home",
+            start: "top top+=82",
+            end: "bottom top",
+            scrub: 1.1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        gsap.to(".gravity-visual", {
+          y: -24,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".gravity-home",
+            start: "top top+=82",
+            end: "bottom top",
+            scrub: 1.1,
+            invalidateOnRefresh: true,
+          },
+        });
+      }
+
       const heroCopy = document.querySelectorAll(".orbital-hero-copy > *");
       if (heroCopy.length) {
         gsap.from(heroCopy, {
@@ -87,7 +148,10 @@ export default function ParticleField() {
       }
     });
 
-    return () => scope.revert();
+    return () => {
+      scope.revert();
+      titleSplit?.revert();
+    };
   }, []);
 
   useEffect(() => {
@@ -101,6 +165,7 @@ export default function ParticleField() {
     let width = 0;
     let height = 0;
     let frame = 0;
+    let animationFrame = 0;
     let drifters: Drifter[] = [];
 
     const resize = () => {
@@ -128,6 +193,7 @@ export default function ParticleField() {
     };
 
     const draw = () => {
+      animationFrame = 0;
       frame += 1;
       context.clearRect(0, 0, width, height);
       context.strokeStyle = "rgba(11,11,11,.18)";
@@ -182,7 +248,26 @@ export default function ParticleField() {
       }
     };
 
-    let animationFrame = 0;
+    const resume = () => {
+      if (!animationFrame && !reducedMotion && !document.hidden) {
+        animationFrame = window.requestAnimationFrame(draw);
+      }
+    };
+
+    const handleResize = () => {
+      resize();
+      if (reducedMotion || !animationFrame) draw();
+    };
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      } else {
+        resume();
+      }
+    };
+
     const handlePointer = (event: PointerEvent) => {
       pointer.x = event.clientX;
       pointer.y = event.clientY;
@@ -192,15 +277,17 @@ export default function ParticleField() {
 
     resize();
     draw();
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", handleResize);
     window.addEventListener("pointermove", handlePointer, { passive: true });
     document.addEventListener("pointerleave", clearPointer);
+    document.addEventListener("visibilitychange", handleVisibility);
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
-      window.removeEventListener("resize", resize);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("pointermove", handlePointer);
       document.removeEventListener("pointerleave", clearPointer);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 

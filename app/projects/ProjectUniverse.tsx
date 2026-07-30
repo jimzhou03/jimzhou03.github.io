@@ -58,7 +58,7 @@ export default function ProjectUniverse() {
     if (!context) return;
 
     const texture = new Image();
-    texture.src = "/planet-surface.png";
+    texture.src = "/planet-surface.webp";
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const pointer = { x: 0, y: 0, targetX: 0, targetY: 0 };
@@ -66,6 +66,7 @@ export default function ProjectUniverse() {
     let height = 0;
     let frame = 0;
     let animationFrame = 0;
+    let inViewport = true;
     let redraw = () => {};
     let stars: Array<{ x: number; y: number; radius: number; alpha: number }> = [];
     const halo = buildHalo(projectWords[activeProject.slug]);
@@ -98,7 +99,7 @@ export default function ProjectUniverse() {
     ) => {
       const orbitScale = [1.65, 2.18, 2.6][word.orbit];
       const verticalScale = [0.74, 1.08, 1.42][word.orbit];
-      const time = reducedMotion ? 0 : frame * 0.00055 * word.speed;
+      const time = reducedMotion ? 0 : frame * 0.00105 * word.speed;
       const angle = word.phase + time;
       const depth = Math.sin(angle);
       if ((depth >= 0) !== drawFront) return;
@@ -111,14 +112,11 @@ export default function ProjectUniverse() {
       context.font = `${word.size > 1.3 ? 400 : 500} ${fontSize}px ${
         word.size > 1.3 ? 'Georgia, "Times New Roman", serif' : '"Courier New", monospace'
       }`;
-      const textWidth = context.measureText(word.label).width;
       const rawX = centerX + x + pointer.x * 8;
       const rawY = centerY + y + pointer.y * 5;
-      const safeX = Math.min(width - textWidth / 2 - 10, Math.max(textWidth / 2 + 10, rawX));
-      const safeY = Math.min(height - fontSize - 10, Math.max(fontSize + 10, rawY));
 
       context.save();
-      context.translate(safeX, safeY);
+      context.translate(rawX, rawY);
       context.fillStyle = `rgba(241,234,217,${Math.max(0.07, alpha)})`;
       context.textAlign = "center";
       context.textBaseline = "middle";
@@ -145,10 +143,10 @@ export default function ProjectUniverse() {
           sourceY,
           sourceSize,
           sourceSize,
-          -radius * 1.04,
-          -radius * 1.04,
-          radius * 2.08,
-          radius * 2.08,
+          -radius * 1.46,
+          -radius * 1.46,
+          radius * 2.92,
+          radius * 2.92,
         );
         context.restore();
       } else {
@@ -188,6 +186,7 @@ export default function ProjectUniverse() {
     };
 
     const draw = () => {
+      animationFrame = 0;
       frame += 1;
       pointer.x += (pointer.targetX - pointer.x) * 0.04;
       pointer.y += (pointer.targetY - pointer.y) * 0.04;
@@ -238,11 +237,17 @@ export default function ProjectUniverse() {
       drawPlanet(centerX, centerY, radius);
       halo.forEach((word) => drawWord(word, centerX, centerY, radius, true));
 
-      if (!reducedMotion && !document.hidden) {
+      if (!reducedMotion && !document.hidden && inViewport) {
         animationFrame = window.requestAnimationFrame(draw);
       }
     };
     redraw = draw;
+
+    const resume = () => {
+      if (!animationFrame && !reducedMotion && !document.hidden && inViewport) {
+        animationFrame = window.requestAnimationFrame(draw);
+      }
+    };
 
     const handlePointer = (event: PointerEvent) => {
       const bounds = wrapper.getBoundingClientRect();
@@ -256,21 +261,40 @@ export default function ProjectUniverse() {
     };
 
     const handleVisibility = () => {
-      if (!document.hidden) draw();
+      if (document.hidden) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      } else {
+        resume();
+      }
     };
 
-    const observer = new ResizeObserver(resize);
-    observer.observe(wrapper);
+    const resizeObserver = new ResizeObserver(resize);
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        inViewport = entry.isIntersecting;
+        if (inViewport) {
+          resume();
+        } else {
+          window.cancelAnimationFrame(animationFrame);
+          animationFrame = 0;
+        }
+      },
+      { rootMargin: "140px 0px" },
+    );
+    resizeObserver.observe(wrapper);
+    visibilityObserver.observe(wrapper);
     wrapper.addEventListener("pointermove", handlePointer, { passive: true });
     wrapper.addEventListener("pointerleave", resetPointer);
     document.addEventListener("visibilitychange", handleVisibility);
-    texture.addEventListener("load", draw, { once: true });
+    texture.addEventListener("load", resume, { once: true });
     resize();
     draw();
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
-      observer.disconnect();
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
       wrapper.removeEventListener("pointermove", handlePointer);
       wrapper.removeEventListener("pointerleave", resetPointer);
       document.removeEventListener("visibilitychange", handleVisibility);
@@ -306,7 +330,7 @@ export default function ProjectUniverse() {
         <div className="project-halo-stage">
           {/* The raster layer keeps the visual present while the animated canvas initializes. */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="project-planet-fallback" src="/planet-surface.png" alt="" aria-hidden="true" />
+          <img className="project-planet-fallback" src="/planet-surface.webp" alt="" aria-hidden="true" />
           <canvas ref={canvasRef} className="project-halo-canvas" aria-hidden="true" />
           <p className="project-halo-caption">
             SELECT A PROJECT TO SHIFT THE FIELD

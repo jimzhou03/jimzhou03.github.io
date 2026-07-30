@@ -36,11 +36,13 @@ const tokenPositions = [
 
 export default function GravityField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const planetRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    const planet = planetRef.current;
     const stage = canvas?.parentElement;
-    if (!canvas || !stage) return;
+    if (!canvas || !planet || !stage) return;
     const context = canvas.getContext("2d");
     if (!context) return;
 
@@ -50,7 +52,9 @@ export default function GravityField() {
     let height = 0;
     let frame = 0;
     let animationFrame = 0;
+    let inViewport = true;
     let particles: Particle[] = [];
+    let planetGeometry = { x: 0, y: 0, radius: 0 };
 
     const resetParticle = (particle: Particle, randomX = false) => {
       particle.x = randomX ? Math.random() * width * 0.78 : width * (0.04 + Math.random() * 0.12);
@@ -73,14 +77,24 @@ export default function GravityField() {
       canvas.style.height = `${height}px`;
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
 
+      const planetBounds = planet.getBoundingClientRect();
+      planetGeometry = {
+        x: planetBounds.left - bounds.left + planetBounds.width / 2,
+        y: planetBounds.top - bounds.top + planetBounds.height / 2,
+        radius: planetBounds.width / 2,
+      };
+
       particles = Array.from({ length: width < 700 ? 58 : 112 }, () => {
         const particle = {} as Particle;
         resetParticle(particle, true);
         return particle;
       });
+
+      if (reducedMotion || !animationFrame) draw();
     };
 
     const draw = () => {
+      animationFrame = 0;
       frame += 1;
       context.clearRect(0, 0, width, height);
 
@@ -150,16 +164,38 @@ export default function GravityField() {
         const y = height * position.y + floatY;
         const pointerShiftX = pointer.active ? (pointer.x - width / 2) * 0.012 : 0;
         const pointerShiftY = pointer.active ? (pointer.y - height / 2) * 0.008 : 0;
+        const drawX = x + pointerShiftX;
+        const drawY = y + pointerShiftY;
+        const overPlanet =
+          Math.hypot(drawX - planetGeometry.x, drawY - planetGeometry.y) <
+          planetGeometry.radius * 0.96;
 
-        context.fillStyle = `rgba(10,10,9,${index < 5 ? 0.72 : 0.56})`;
         context.font = `${index < 5 ? 500 : 450} ${index < 5 ? 18 : 15}px ${
           index < 5 ? '"Songti SC", "SimSun", Georgia, serif' : 'Arial, sans-serif'
         }`;
         context.textAlign = "center";
-        context.fillText(token, x + pointerShiftX, y + pointerShiftY);
+        context.textBaseline = "middle";
+
+        if (overPlanet) {
+          context.lineJoin = "round";
+          context.lineWidth = 3;
+          context.strokeStyle = "rgba(10,10,9,.62)";
+          context.strokeText(token, drawX, drawY);
+          context.fillStyle = `rgba(242,239,231,${index < 5 ? 0.9 : 0.76})`;
+        } else {
+          context.fillStyle = `rgba(10,10,9,${index < 5 ? 0.72 : 0.56})`;
+        }
+
+        context.fillText(token, drawX, drawY);
       });
 
-      if (!reducedMotion && !document.hidden) {
+      if (!reducedMotion && !document.hidden && inViewport) {
+        animationFrame = window.requestAnimationFrame(draw);
+      }
+    };
+
+    const resume = () => {
+      if (!animationFrame && !reducedMotion && !document.hidden && inViewport) {
         animationFrame = window.requestAnimationFrame(draw);
       }
     };
@@ -174,25 +210,50 @@ export default function GravityField() {
       pointer.active = false;
     };
 
-    const observer = new ResizeObserver(resize);
-    observer.observe(stage);
+    const handleVisibility = () => {
+      if (document.hidden) {
+        window.cancelAnimationFrame(animationFrame);
+        animationFrame = 0;
+      } else {
+        resume();
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(resize);
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        inViewport = entry.isIntersecting;
+        if (inViewport) {
+          resume();
+        } else {
+          window.cancelAnimationFrame(animationFrame);
+          animationFrame = 0;
+        }
+      },
+      { rootMargin: "120px 0px" },
+    );
+    resizeObserver.observe(stage);
+    visibilityObserver.observe(stage);
     stage.addEventListener("pointermove", handlePointer, { passive: true });
     stage.addEventListener("pointerleave", clearPointer);
+    document.addEventListener("visibilitychange", handleVisibility);
     resize();
     draw();
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
-      observer.disconnect();
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
       stage.removeEventListener("pointermove", handlePointer);
       stage.removeEventListener("pointerleave", clearPointer);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 
   return (
     <div className="gravity-visual" aria-hidden="true">
       {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="gravity-planet" src="/planet-surface.png" alt="" />
+      <img ref={planetRef} className="gravity-planet" src="/planet-surface.webp" alt="" />
       <canvas ref={canvasRef} className="gravity-canvas" />
     </div>
   );
