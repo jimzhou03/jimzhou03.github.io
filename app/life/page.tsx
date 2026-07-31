@@ -1,45 +1,91 @@
 import SiteFrame from "../components/SiteFrame";
-import { lifeEntries } from "../../content/life";
+import { lifeEntries, type LifeEntry } from "../../content/life";
+
+function PhotoFrame({ entry, className }: { entry: LifeEntry; className: string }) {
+  return (
+    <figure className={`life-frame ${className}`} data-sequence={entry.id}>
+      <div className="life-frame-image">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={entry.image}
+          alt={entry.alt}
+          width={entry.width}
+          height={entry.height}
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <figcaption>
+        <span>{entry.id} / {entry.category}</span>
+        <div>
+          <strong>{entry.title}</strong>
+          <p>{entry.caption}</p>
+        </div>
+      </figcaption>
+    </figure>
+  );
+}
 
 export default function LifePage() {
+  const dogs = lifeEntries.filter((entry) => entry.group === "dogs");
+  const places = lifeEntries.filter((entry) => entry.group === "places");
+  const courtyard = lifeEntries.find((entry) => entry.group === "courtyard");
+
   return (
     <SiteFrame active="life">
-      <header className="life-archive-hero">
+      <header className="life-archive-hero life-story-hero">
         <div className="archive-index">
           <span>LIFE / PHOTO ARCHIVE</span>
           <b>03 / 04</b>
         </div>
-        <h1>Cats<br /><em>&amp; dogs.</em></h1>
+        <h1>
+          Small lives,<br />
+          <em>familiar skies.</em>
+        </h1>
         <p>
-          A small photo archive of the animals around home.
+          The dogs I grew up with, the views around school, and one cat who kept
+          returning to the courtyard.
         </p>
       </header>
 
-      <section className="photo-archive">
-        {lifeEntries.map((entry, index) => (
-          <article className={`photo-archive-entry photo-entry-${index + 1}`} key={entry.id}>
-            <div className="photo-archive-image">
-              {entry.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={entry.image} alt={entry.alt} />
-              ) : (
-                <div className="photo-placeholder-orbit">
-                  <span>{entry.id}</span>
-                  <i />
-                  <b>YOUR PHOTOGRAPH<br />WILL LIVE HERE</b>
-                  <small>{entry.category}</small>
-                </div>
-              )}
-            </div>
-            <div className="photo-archive-copy">
-              <span>{entry.id} / {entry.category}</span>
-              <h2>{entry.title}</h2>
-              <p>{entry.caption}</p>
-            </div>
-          </article>
-        ))}
-      </section>
+      <main className="life-story">
+        <section className="life-chapter life-dog-chapter" aria-labelledby="dogs-heading">
+          <header className="life-chapter-heading">
+            <span>01 / HOME</span>
+            <h2 id="dogs-heading">Three dogs,<br /><em>many years.</em></h2>
+            <p>Xiaopang, Xiaoshou and Xiaosan — seen across different rooms and different years.</p>
+          </header>
+          <div className="life-photo-grid life-dog-grid">
+            {dogs.map((entry, index) => (
+              <PhotoFrame entry={entry} className={`life-dog-${index + 1}`} key={entry.id} />
+            ))}
+          </div>
+        </section>
 
+        <section className="life-chapter life-place-chapter" aria-labelledby="places-heading">
+          <header className="life-chapter-heading life-chapter-heading-split">
+            <span>02 / BETWEEN CLASSES</span>
+            <h2 id="places-heading">Skies around<br /><em>school.</em></h2>
+            <p>Railways, water, palm trees and the changing light around campus.</p>
+          </header>
+          <div className="life-photo-grid life-place-grid">
+            {places.map((entry, index) => (
+              <PhotoFrame entry={entry} className={`life-place-${index + 1}`} key={entry.id} />
+            ))}
+          </div>
+        </section>
+
+        {courtyard ? (
+          <section className="life-epilogue" aria-labelledby="courtyard-heading">
+            <div className="life-epilogue-copy">
+              <span>03 / COURTYARD</span>
+              <h2 id="courtyard-heading">One last<br /><em>visitor.</em></h2>
+              <p>{courtyard.caption}</p>
+            </div>
+            <PhotoFrame entry={courtyard} className="life-cat-frame" />
+          </section>
+        ) : null}
+      </main>
     </SiteFrame>
   );
 }
