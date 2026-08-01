@@ -117,7 +117,8 @@ export default function ParticleField() {
             ".about-minimal-grid > *",
             ".case-editorial-grid > *",
             ".system-route article",
-            ".evaluation-panel article",
+            ".workflow-panel article",
+            ".contribution-panel > *",
           ].join(", "),
         )
         .forEach((element) => {

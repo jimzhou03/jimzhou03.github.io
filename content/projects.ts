@@ -23,7 +23,7 @@ export const projects: Project[] = [
       "A bachelor-thesis system integrating RAG, a domain knowledge graph and Bayesian Knowledge Tracing for course-grounded question answering and learner-state support.",
     question:
       "When does structured knowledge add something that semantic retrieval alone cannot?",
-    role: "WORKFLOW · GRAPH · BACKEND · DEPLOYMENT",
+    role: "PROJECT LEAD · WORKFLOW ENGINEERING · API INTEGRATION",
     tags: ["RAG", "DOMAIN KG", "BKT", "DIFY", "POSTGRESQL", "APACHE AGE"],
     featured: true,
     order: 1,
