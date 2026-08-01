@@ -33,21 +33,6 @@ export default function LifePage() {
 
   return (
     <SiteFrame active="life">
-      <header className="life-archive-hero life-story-hero">
-        <div className="archive-index">
-          <span>LIFE / PHOTO ARCHIVE</span>
-          <b>03 / 04</b>
-        </div>
-        <h1>
-          Small lives,<br />
-          <em>familiar skies.</em>
-        </h1>
-        <p>
-          The dogs I grew up with, the views around school, and one cat who kept
-          returning to the courtyard.
-        </p>
-      </header>
-
       <main className="life-story">
         <section className="life-chapter life-dog-chapter" aria-labelledby="dogs-heading">
           <header className="life-chapter-heading">

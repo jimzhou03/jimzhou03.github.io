@@ -5,7 +5,7 @@ export default function SiteFooter() {
         <b>WEIJIE ZHOU</b>
       </div>
       <blockquote className="footer-motto">
-        <span lang="zh-CN">前途是光明的，道路是曲折的。</span>
+        <span lang="zh-CN">前途是光明的，道路是曲折的。——毛泽东</span>
         <cite>THE FUTURE IS BRIGHT. THE ROAD IS WINDING. · MAO ZEDONG</cite>
       </blockquote>
       <nav className="footer-links" aria-label="Contact links">

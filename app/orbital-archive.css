@@ -2970,85 +2970,6 @@ body {
   height: 100%;
 }
 
-.gravity-token-cloud,
-.gravity-meteor-field {
-  position: absolute;
-  z-index: 2;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.gravity-token-cloud { z-index: 3; }
-
-.gravity-token-cloud span {
-  position: absolute;
-  color: var(--ink);
-  font-family: var(--font-sans);
-  white-space: nowrap;
-  transform: translate(-50%, -50%);
-  animation: gravity-token-float 7s ease-in-out infinite alternate;
-}
-
-.gravity-token-cloud span.is-serif {
-  font-family: "Songti SC", SimSun, var(--serif);
-}
-
-.gravity-meteor-field i {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: rgba(10,10,9,.55);
-  box-shadow: 0 0 0 1px rgba(10,10,9,.04);
-  animation: gravity-meteor-drift 12s linear infinite;
-}
-
-.gravity-meteor-field i:nth-child(5n + 1) { width: 5px; height: 5px; opacity: .45; }
-.gravity-meteor-field i:nth-child(7n + 2) { width: 8px; height: 8px; opacity: .28; }
-.gravity-meteor-field i:nth-child(3n) { opacity: .34; }
-.gravity-meteor-field i:nth-child(1) { left: 4%; top: 14%; }
-.gravity-meteor-field i:nth-child(2) { left: 13%; top: 48%; }
-.gravity-meteor-field i:nth-child(3) { left: 8%; top: 81%; }
-.gravity-meteor-field i:nth-child(4) { left: 22%; top: 26%; }
-.gravity-meteor-field i:nth-child(5) { left: 27%; top: 68%; }
-.gravity-meteor-field i:nth-child(6) { left: 34%; top: 10%; }
-.gravity-meteor-field i:nth-child(7) { left: 39%; top: 90%; }
-.gravity-meteor-field i:nth-child(8) { left: 45%; top: 39%; }
-.gravity-meteor-field i:nth-child(9) { left: 48%; top: 75%; }
-.gravity-meteor-field i:nth-child(10) { left: 54%; top: 17%; }
-.gravity-meteor-field i:nth-child(11) { left: 58%; top: 59%; }
-.gravity-meteor-field i:nth-child(12) { left: 63%; top: 86%; }
-.gravity-meteor-field i:nth-child(13) { left: 67%; top: 30%; }
-.gravity-meteor-field i:nth-child(14) { left: 72%; top: 12%; }
-.gravity-meteor-field i:nth-child(15) { left: 76%; top: 66%; }
-.gravity-meteor-field i:nth-child(16) { left: 82%; top: 42%; }
-.gravity-meteor-field i:nth-child(17) { left: 88%; top: 18%; }
-.gravity-meteor-field i:nth-child(18) { left: 92%; top: 78%; }
-.gravity-meteor-field i:nth-child(19) { left: 17%; top: 8%; }
-.gravity-meteor-field i:nth-child(20) { left: 30%; top: 44%; }
-.gravity-meteor-field i:nth-child(21) { left: 51%; top: 52%; }
-.gravity-meteor-field i:nth-child(22) { left: 60%; top: 20%; }
-.gravity-meteor-field i:nth-child(23) { left: 70%; top: 94%; }
-.gravity-meteor-field i:nth-child(24) { left: 79%; top: 24%; }
-.gravity-meteor-field i:nth-child(25) { left: 96%; top: 52%; }
-.gravity-meteor-field i:nth-child(26) { left: 11%; top: 65%; }
-.gravity-meteor-field i:nth-child(27) { left: 42%; top: 18%; }
-.gravity-meteor-field i:nth-child(28) { left: 56%; top: 72%; }
-.gravity-meteor-field i:nth-child(29) { left: 85%; top: 88%; }
-.gravity-meteor-field i:nth-child(30) { left: 94%; top: 32%; }
-
-@keyframes gravity-token-float {
-  from { margin: -3px 0 0 -5px; }
-  to { margin: 4px 0 0 5px; }
-}
-
-@keyframes gravity-meteor-drift {
-  0% { translate: -8px -3px; }
-  50% { translate: 9px 5px; }
-  100% { translate: -8px -3px; }
-}
-
 .gravity-black-hole {
   position: absolute;
   z-index: 1;
@@ -3970,7 +3891,7 @@ body {
 
 .footer-motto cite {
   color: rgba(10,10,9,.43);
-  font: 8px/1.4 var(--font-mono);
+  font: 11px/1.5 var(--font-mono);
   font-style: normal;
   letter-spacing: .1em;
 }
@@ -4037,5 +3958,37 @@ body {
 
   .footer-links {
     grid-column: auto;
+  }
+}
+
+/* Life places — editorial masonry with every photograph kept at its native ratio. */
+.life-place-grid {
+  display: block;
+  columns: 2;
+  column-gap: clamp(22px, 3.2vw, 52px);
+}
+
+.life-place-grid .life-frame {
+  width: 100%;
+  margin: 0 0 clamp(42px, 5vw, 76px);
+  padding-top: 0;
+  break-inside: avoid;
+}
+
+.life-place-grid .life-frame-image {
+  aspect-ratio: auto;
+}
+
+.life-place-grid .life-frame img,
+.life-place-grid .life-frame:hover img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  transform: none;
+}
+
+@media (max-width: 580px) {
+  .life-place-grid {
+    columns: 1;
   }
 }
