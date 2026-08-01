@@ -1,7 +1,8 @@
 import { lifeEntries, type LifeEntry } from "./life";
 
 export type CityId = "chongqing" | "guangzhou" | "zhuhai";
-export type TransitMode = "bus" | "plane";
+export type GermanyNodeId = "frankfurt" | "heidelberg";
+export type TransitMode = "bus" | "plane" | "train";
 
 export type LifeLocation = {
   id: CityId;
@@ -17,10 +18,17 @@ export type LifeLocation = {
 };
 
 export type LifeRoute = {
-  from: CityId;
-  to: CityId;
+  from: CityId | GermanyNodeId;
+  to: CityId | GermanyNodeId;
   mode: TransitMode;
   pathD: string;
+};
+
+export type GermanyLocation = {
+  id: GermanyNodeId;
+  label: string;
+  role: "ARRIVAL" | "STUDY";
+  map: { x: number; y: number };
 };
 
 const dogs = lifeEntries.filter((entry) => entry.group === "dogs");
@@ -104,6 +112,37 @@ const routes: Record<string, LifeRoute> = {
 };
 
 export const cityIds = Object.keys(lifeLocations) as CityId[];
+
+export const germanyLocations: Record<GermanyNodeId, GermanyLocation> = {
+  frankfurt: {
+    id: "frankfurt",
+    label: "FRANKFURT",
+    role: "ARRIVAL",
+    map: { x: 214, y: 478 },
+  },
+  heidelberg: {
+    id: "heidelberg",
+    label: "HEIDELBERG",
+    role: "STUDY",
+    map: { x: 236, y: 570 },
+  },
+};
+
+export const germanyNodeIds = Object.keys(germanyLocations) as GermanyNodeId[];
+
+export const chinaToGermanyRoute: LifeRoute = {
+  from: "guangzhou",
+  to: "frankfurt",
+  mode: "plane",
+  pathD: "M 522 490 C 430 474 304 358 92 304",
+};
+
+export const frankfurtToHeidelbergRoute: LifeRoute = {
+  from: "frankfurt",
+  to: "heidelberg",
+  mode: "train",
+  pathD: "M 214 478 C 218 512 226 538 236 570",
+};
 
 export function getLifeRoute(from: CityId, to: CityId): LifeRoute {
   return routes[`${from}-${to}`];
