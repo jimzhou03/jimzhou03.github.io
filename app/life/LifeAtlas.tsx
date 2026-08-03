@@ -276,6 +276,7 @@ export default function LifeAtlas() {
     if (isTransitioning || lifeView !== "china") return;
     setIsTransitioning(true);
     setHoveredChinaCity(null);
+    setActiveChinaCity("guangzhou");
     setLifeView("chinaToGermany");
   };
 
@@ -338,17 +339,29 @@ export default function LifeAtlas() {
       <section className="life-atlas-map-panel">
         {isChina ? (
           <button
-            className="life-atlas-quiet-module life-atlas-next-module"
+            className="life-atlas-world-portal"
             type="button"
             disabled={isTransitioning}
             onClick={beginGermanyJourney}
             onKeyDown={(event) => activateWithKeyboard(event, beginGermanyJourney)}
             aria-label="Open route from Guangzhou to Frankfurt, continuing to Heidelberg"
           >
-            <span>04 / NEXT</span>
-            <strong id="life-atlas-title">HEIDELBERG</strong>
-            <em>Germany, upcoming chapter.</em>
-            <small>{lifeView === "chinaToGermany" ? "IN TRANSIT →" : "OPEN ROUTE →"}</small>
+            <span className="life-atlas-world-kicker">04 / NEXT · WORLD ROUTE</span>
+            <span className="life-atlas-world-globe" aria-hidden="true">
+              {/* Wikimedia Commons public-domain world map. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/life/world-map.png" alt="" />
+              <span className="life-atlas-world-destination">
+                <i />
+                <span>
+                  <strong id="life-atlas-title">HEIDELBERG</strong>
+                  <small>GERMANY · 49°24′N</small>
+                </span>
+              </span>
+            </span>
+            <span className="life-atlas-world-action">
+              {lifeView === "chinaToGermany" ? "IN TRANSIT →" : "OPEN ROUTE →"}
+            </span>
           </button>
         ) : (
           <div className="life-atlas-quiet-module life-atlas-germany-module">
@@ -572,7 +585,7 @@ export default function LifeAtlas() {
         </div>
 
         <small className="life-atlas-map-credit">
-          Map outlines: MapSVG · CC BY 4.0 · Icons: Material Icons · Apache 2.0
+          Map outlines: MapSVG · CC BY 4.0 · World map: Wikimedia Commons · Public domain · Icons: Material Icons · Apache 2.0
         </small>
       </section>
 

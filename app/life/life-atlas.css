@@ -33,13 +33,6 @@
   backdrop-filter: blur(5px);
 }
 
-.life-atlas-next-module {
-  display: grid;
-  align-content: start;
-  border-radius: 0;
-  cursor: pointer;
-}
-
 .life-atlas-quiet-module::before,
 .life-atlas-quiet-module::after {
   position: absolute;
@@ -109,6 +102,143 @@
   cursor: pointer;
 }
 
+.life-atlas-world-portal {
+  position: relative;
+  z-index: 5;
+  display: block;
+  width: min(390px, 48%);
+  min-height: 178px;
+  padding: 0;
+  color: var(--ink);
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.life-atlas-world-portal:disabled {
+  cursor: wait;
+}
+
+.life-atlas-world-portal:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 7px;
+}
+
+.life-atlas-world-kicker,
+.life-atlas-world-action {
+  position: absolute;
+  z-index: 3;
+  font: 8px/1.3 var(--font-mono);
+  letter-spacing: .11em;
+}
+
+.life-atlas-world-kicker {
+  top: 4px;
+  left: 0;
+}
+
+.life-atlas-world-action {
+  right: 0;
+  bottom: 26px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(10, 10, 9, .55);
+}
+
+.life-atlas-world-globe {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  width: 156px;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border: 1px solid rgba(10, 10, 9, .42);
+  border-radius: 50%;
+  background: rgba(242, 239, 231, .66);
+  transition: transform 320ms ease;
+}
+
+.life-atlas-world-globe::before,
+.life-atlas-world-globe::after {
+  position: absolute;
+  z-index: 2;
+  inset: 10% 34%;
+  border: 1px solid rgba(10, 10, 9, .14);
+  border-radius: 50%;
+  content: "";
+  pointer-events: none;
+}
+
+.life-atlas-world-globe::after {
+  inset: 34% 7%;
+}
+
+.life-atlas-world-globe > img {
+  position: absolute;
+  top: 50%;
+  left: -29%;
+  display: block;
+  width: 158%;
+  height: auto;
+  opacity: .48;
+  filter: grayscale(1) contrast(.72);
+  transform: translateY(-50%);
+  transition: opacity 320ms ease, transform 480ms ease;
+}
+
+.life-atlas-world-destination {
+  position: absolute;
+  z-index: 4;
+  top: 28%;
+  left: 52%;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  width: max-content;
+  max-width: 86px;
+}
+
+.life-atlas-world-destination > i {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border: 1px solid var(--paper);
+  border-radius: 50%;
+  background: var(--ink);
+  box-shadow: 0 0 0 1px var(--ink);
+}
+
+.life-atlas-world-destination > span {
+  display: grid;
+  gap: 2px;
+  padding: 3px 5px;
+  background: rgba(242, 239, 231, .86);
+  backdrop-filter: blur(4px);
+}
+
+.life-atlas-world-destination strong,
+.life-atlas-world-destination small {
+  font: 500 8px/1.15 var(--font-mono);
+  letter-spacing: .06em;
+}
+
+.life-atlas-world-destination small {
+  color: rgba(10, 10, 9, .56);
+  font-size: 6px;
+  font-weight: 400;
+}
+
+.life-atlas-world-portal:hover .life-atlas-world-globe,
+.life-atlas-world-portal:focus-visible .life-atlas-world-globe {
+  transform: scale(1.035);
+}
+
+.life-atlas-world-portal:hover .life-atlas-world-globe > img,
+.life-atlas-world-portal:focus-visible .life-atlas-world-globe > img {
+  opacity: .62;
+  transform: translateY(-50%) translateX(-2%);
+}
+
 .life-atlas-map {
   position: relative;
   min-height: 330px;
@@ -120,7 +250,12 @@
 }
 
 .life-atlas-map-canvas.is-china {
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  height: 100%;
+  aspect-ratio: 774 / 569;
+  transform: translate(-50%, -50%);
 }
 
 .life-atlas-map-canvas.is-germany {
@@ -232,7 +367,7 @@
   border: 0;
   background: transparent;
   text-align: left;
-  transform: translate(-11px, -50%);
+  transform: translate(-6px, -50%);
   cursor: pointer;
   pointer-events: auto;
 }
@@ -255,14 +390,14 @@
 .life-atlas-city-node::before {
   position: absolute;
   top: 50%;
-  left: 0;
+  left: 6px;
   width: 34px;
   height: 34px;
   border: 1px solid rgba(10, 10, 9, .2);
   border-radius: 50%;
   content: "";
   opacity: 0;
-  transform: translate(-11px, -50%) scale(.72);
+  transform: translate(-50%, -50%) scale(.72);
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
@@ -304,7 +439,7 @@
 .life-atlas-city-node:focus-visible::before,
 .life-atlas-city-node.is-hovered::before {
   opacity: 1;
-  transform: translate(-11px, -50%) scale(1);
+  transform: translate(-50%, -50%) scale(1);
 }
 
 .life-atlas-city-node:focus-visible {
@@ -663,9 +798,18 @@
     width: min(420px, 72%);
   }
 
+  .life-atlas-world-portal {
+    width: min(390px, 74%);
+  }
+
   .life-atlas-map {
     height: min(78vw, 570px);
     margin: -18px 0 0;
+  }
+
+  .life-atlas-map-canvas.is-china {
+    width: 100%;
+    height: auto;
   }
 
   .life-atlas-map-canvas.is-germany {
@@ -784,6 +928,33 @@
     padding: 20px 22px;
   }
 
+  .life-atlas-world-portal {
+    width: min(330px, 92%);
+    min-height: 160px;
+  }
+
+  .life-atlas-world-globe {
+    left: 4px;
+    width: 140px;
+  }
+
+  .life-atlas-world-destination {
+    left: 44%;
+    gap: 4px;
+  }
+
+  .life-atlas-world-destination > span {
+    padding-inline: 3px;
+  }
+
+  .life-atlas-world-destination strong {
+    font-size: 7px;
+  }
+
+  .life-atlas-world-action {
+    bottom: 22px;
+  }
+
   .life-atlas-quiet-module strong,
   .life-atlas-quiet-module h1 {
     font-size: 36px;
@@ -891,7 +1062,9 @@
   .life-atlas-node-dot,
   .life-atlas-node-label,
   .life-atlas-city-node::before,
-  .life-atlas-photo img {
+  .life-atlas-photo img,
+  .life-atlas-world-globe,
+  .life-atlas-world-globe > img {
     transition: none;
   }
 }
