@@ -19,9 +19,9 @@ export default function Home() {
               systems
             </span>
             <br />
-            with{" "}
-            <em className="gravity-pull gravity-pull-strong" data-text="context.">
-              context.
+            grounded in{" "}
+            <em className="gravity-pull gravity-pull-strong" data-text="evidence.">
+              evidence.
             </em>
           </h1>
           <div className="gravity-rule" />

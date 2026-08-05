@@ -52,11 +52,13 @@ export default function GravityField() {
     if (!context) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reducedMotionFrameInterval = 1000 / 15;
     const pointer = { x: -1000, y: -1000, active: false };
     let width = 0;
     let height = 0;
     let frame = 0;
     let animationFrame = 0;
+    let lastDrawTime = 0;
     let inViewport = true;
     let particles: Particle[] = [];
     let tokens: GravityToken[] = [];
@@ -128,7 +130,7 @@ export default function GravityField() {
         return token;
       });
 
-      if (reducedMotion || !animationFrame) draw();
+      if (!animationFrame) draw();
     };
 
     const drawDistortedStream = () => {
@@ -331,8 +333,24 @@ export default function GravityField() {
       context.stroke();
     };
 
-    const draw = () => {
+    const draw = (timestamp = performance.now()) => {
       animationFrame = 0;
+
+      // Keep the field alive for visitors whose OS requests reduced motion.
+      // Rendering fewer frames preserves that preference without turning the
+      // canvas into a random still image that only changes after a refresh.
+      if (
+        reducedMotion &&
+        lastDrawTime &&
+        timestamp - lastDrawTime < reducedMotionFrameInterval
+      ) {
+        if (!document.hidden && inViewport) {
+          animationFrame = window.requestAnimationFrame(draw);
+        }
+        return;
+      }
+
+      lastDrawTime = timestamp;
       frame += 1;
       context.clearRect(0, 0, width, height);
       drawDistortedStream();
@@ -340,13 +358,13 @@ export default function GravityField() {
       drawTokens();
       drawPointerField();
 
-      if (!reducedMotion && !document.hidden && inViewport) {
+      if (!document.hidden && inViewport) {
         animationFrame = window.requestAnimationFrame(draw);
       }
     };
 
     const resume = () => {
-      if (!animationFrame && !reducedMotion && !document.hidden && inViewport) {
+      if (!animationFrame && !document.hidden && inViewport) {
         animationFrame = window.requestAnimationFrame(draw);
       }
     };
@@ -390,7 +408,6 @@ export default function GravityField() {
     stage.addEventListener("pointerleave", clearPointer);
     document.addEventListener("visibilitychange", handleVisibility);
     resize();
-    draw();
 
     return () => {
       window.cancelAnimationFrame(animationFrame);
