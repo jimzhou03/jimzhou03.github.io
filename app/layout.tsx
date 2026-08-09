@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { AsciiTransitionProvider } from "./components/AsciiTransition";
 import "./language-constellation.css";
 import "./orbital-archive.css";
 
@@ -50,7 +51,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geist.variable} ${geistMono.variable}`}>{children}</body>
+      <body className={`${geist.variable} ${geistMono.variable}`}>
+        <AsciiTransitionProvider>{children}</AsciiTransitionProvider>
+      </body>
     </html>
   );
 }

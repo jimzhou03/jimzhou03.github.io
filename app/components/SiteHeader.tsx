@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AsciiTransitionLink } from "./AsciiTransition";
 
 const items = [
   { id: "index", label: "Index", href: "/" },
@@ -16,13 +17,13 @@ export default function SiteHeader({ active }: { active: string }) {
 
       <nav className="main-nav" aria-label="Primary navigation">
         {items.map((item) => (
-          <Link
+          <AsciiTransitionLink
             key={item.id}
             href={item.href}
             className={active === item.id ? "active" : undefined}
           >
             <span>0{items.indexOf(item) + 1}</span>{item.label}
-          </Link>
+          </AsciiTransitionLink>
         ))}
       </nav>
 
