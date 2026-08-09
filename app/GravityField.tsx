@@ -81,7 +81,7 @@ export default function GravityField() {
               ? 0.9 + Math.random() * 1.35
               : 0.32 + Math.random() * 0.7;
       particle.stretch = 0.72 + Math.random() * 0.8;
-      particle.baseSpeed = 0.28 + Math.random() * 0.58 + particle.size * 0.012;
+      particle.baseSpeed = 0.4 + Math.random() * 0.76 + particle.size * 0.016;
       particle.vx = particle.baseSpeed;
       particle.vy = (Math.random() - 0.5) * 0.035;
       particle.alpha = 0.18 + Math.random() * 0.66;
@@ -118,7 +118,7 @@ export default function GravityField() {
         influence: Math.max(horizonBounds.width * 2.65, Math.min(width, height) * 0.58),
       };
 
-      particles = Array.from({ length: width < 700 ? 138 : 286 }, () => {
+      particles = Array.from({ length: width < 700 ? 184 : 380 }, () => {
         const particle = {} as Particle;
         resetParticle(particle, true);
         return particle;
@@ -208,7 +208,7 @@ export default function GravityField() {
         particle.vy *= 0.991;
 
         const speed = Math.hypot(particle.vx, particle.vy);
-        const maxSpeed = 3.8;
+        const maxSpeed = 4.8;
         if (speed > maxSpeed) {
           particle.vx = (particle.vx / speed) * maxSpeed;
           particle.vy = (particle.vy / speed) * maxSpeed;

@@ -1,7 +1,6 @@
 import Link from "next/link";
 import SiteFrame from "./components/SiteFrame";
 import GravityField from "./GravityField";
-import { projects } from "../content/projects";
 
 export default function Home() {
   return (
@@ -57,25 +56,6 @@ export default function Home() {
         <GravityField />
       </section>
 
-      <section className="gravity-projects" aria-label="Selected projects">
-        {projects.map((project, index) => (
-          <article className="gravity-project-row" key={project.slug}>
-            <span className="gravity-project-number">0{index + 1}</span>
-            <div className="gravity-project-title">
-              <h2>{project.title}</h2>
-            </div>
-            <p>{project.summary}</p>
-            <div className="gravity-tech-orbit" aria-label={`${project.title} technologies`}>
-              {project.tags.slice(0, 4).map((tag) => (
-                <span key={tag}>{tag}</span>
-              ))}
-            </div>
-            <Link href={`/projects/${project.slug}`} aria-label={`View ${project.title}`}>
-              →
-            </Link>
-          </article>
-        ))}
-      </section>
     </SiteFrame>
   );
 }

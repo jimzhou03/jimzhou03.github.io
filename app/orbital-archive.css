@@ -1919,7 +1919,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 226px 38px 45px 18px;
+  padding: 0 38px 45px 18px;
 }
 
 .project-universe-list {
@@ -2045,6 +2045,154 @@ body {
   bottom: 24px;
   color: rgba(241,234,217,.34);
   font-size: 7px;
+}
+
+.architecture-stage {
+  position: relative;
+  min-width: 0;
+  min-height: calc(100svh - 78px);
+  padding: 44px 0 28px 34px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.architecture-stage-heading {
+  margin: 0 0 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  color: rgba(241,234,217,.55);
+  font: 11px var(--font-mono);
+  letter-spacing: .1em;
+}
+
+.architecture-stage-heading span:last-child {
+  color: rgba(241,234,217,.32);
+}
+
+.architecture-board {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  max-height: calc(100svh - 190px);
+  overflow: hidden;
+  color: var(--ink);
+  background: #f2efe7;
+  border: 1px solid rgba(241,234,217,.24);
+}
+
+.architecture-board > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.architecture-hotspots {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+}
+
+.architecture-hotspots button {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(10,10,9,.72);
+  border-radius: 50%;
+  color: var(--ink);
+  background: rgba(242,239,231,.94);
+  box-shadow: 0 0 0 5px rgba(242,239,231,.58);
+  font: 10px var(--font-mono);
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translate(-50%, -50%);
+  transition: color 180ms ease, background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+
+.architecture-hotspots button:hover,
+.architecture-hotspots button:focus-visible,
+.architecture-hotspots button.active {
+  color: var(--paper);
+  background: var(--ink);
+  box-shadow: 0 0 0 6px rgba(242,239,231,.78);
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+.architecture-detail {
+  position: absolute;
+  z-index: 3;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  min-height: 48px;
+  padding: 15px 20px 17px;
+  color: var(--ink);
+  background: rgba(242,239,231,.97);
+  border-top: 1px solid rgba(10,10,9,.45);
+  transform: translateY(calc(100% - 48px));
+  transition: transform 320ms cubic-bezier(.22,.76,.2,1);
+}
+
+.architecture-detail.open {
+  transform: translateY(0);
+}
+
+.architecture-detail > p {
+  margin: 0;
+  color: rgba(10,10,9,.64);
+  font: 11px/1.5 var(--font-mono);
+  letter-spacing: .06em;
+}
+
+.architecture-detail-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(10,10,9,.2);
+  font: 11px var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.architecture-detail-head button {
+  padding: 0 0 3px;
+  color: inherit;
+  background: none;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  font: inherit;
+  cursor: pointer;
+}
+
+.architecture-detail-grid {
+  padding-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(180px, .72fr) minmax(280px, 1.28fr);
+  gap: 26px;
+}
+
+.architecture-detail-grid > div + div {
+  padding-left: 26px;
+  border-left: 1px solid rgba(10,10,9,.2);
+}
+
+.architecture-detail-grid span {
+  color: rgba(10,10,9,.5);
+  font: 10px var(--font-mono);
+  letter-spacing: .12em;
+}
+
+.architecture-detail-grid p {
+  margin: 7px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 /* About — one short note, no duplicate résumé */
@@ -3426,7 +3574,7 @@ body {
 
 .about-contact-line { padding-top: 18px; }
 
-.project-universe-index { padding-top: 172px; }
+.project-universe-index { padding-top: 0; }
 
 @media (max-width: 1180px) {
   .gravity-home {
@@ -3494,7 +3642,36 @@ body {
     min-height: calc(100svh - 72px);
   }
 
-  .project-universe-index { padding: 96px 0 30px; }
+  .project-universe-index { padding: 54px 0 30px; }
+
+  .architecture-stage {
+    min-height: auto;
+    padding: 18px 0 42px;
+  }
+
+  .architecture-stage-heading {
+    font-size: 10px;
+  }
+
+  .architecture-board {
+    max-height: none;
+  }
+
+  .architecture-hotspots button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .architecture-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .architecture-detail-grid > div + div {
+    padding: 14px 0 0;
+    border-top: 1px solid rgba(10,10,9,.2);
+    border-left: 0;
+  }
 }
 
 @media (max-width: 560px) {
