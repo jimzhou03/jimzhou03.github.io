@@ -2098,29 +2098,39 @@ body {
 
 .architecture-hotspots button {
   position: absolute;
-  width: 34px;
-  height: 34px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(10,10,9,.72);
-  border-radius: 50%;
-  color: var(--ink);
-  background: rgba(242,239,231,.94);
-  box-shadow: 0 0 0 5px rgba(242,239,231,.58);
-  font: 10px var(--font-mono);
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  color: transparent;
+  background: transparent;
+  box-shadow: inset 0 0 0 0 rgba(10,10,9,0);
   cursor: pointer;
   pointer-events: auto;
-  transform: translate(-50%, -50%);
-  transition: color 180ms ease, background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+  mix-blend-mode: multiply;
+  transition: background 160ms ease, box-shadow 160ms ease;
 }
 
 .architecture-hotspots button:hover,
 .architecture-hotspots button:focus-visible,
 .architecture-hotspots button.active {
-  color: var(--paper);
-  background: var(--ink);
-  box-shadow: 0 0 0 6px rgba(242,239,231,.78);
-  transform: translate(-50%, -50%) scale(1.12);
+  background: rgba(10,10,9,.055);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(10,10,9,.78),
+    0 0 0 4px rgba(242,239,231,.62);
+}
+
+.architecture-hotspots button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+.architecture-hotspots button.active {
+  background: rgba(10,10,9,.1);
+  box-shadow:
+    inset 0 0 0 2px rgba(10,10,9,.92),
+    0 0 0 4px rgba(242,239,231,.78);
 }
 
 .architecture-detail {
@@ -3655,11 +3665,32 @@ body {
 
   .architecture-board {
     max-height: none;
+    aspect-ratio: auto;
+    overflow: visible;
+  }
+
+  .architecture-board > img {
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+
+  .architecture-hotspots {
+    right: 0;
+    bottom: auto;
+    left: 0;
+    height: auto;
+    aspect-ratio: 3 / 2;
+  }
+
+  .architecture-detail,
+  .architecture-detail.open {
+    position: relative;
+    transform: none;
   }
 
   .architecture-hotspots button {
-    width: 40px;
-    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
   }
 
   .architecture-detail-grid {
