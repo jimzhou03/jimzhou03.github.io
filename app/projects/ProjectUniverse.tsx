@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import type { Icon } from "@phosphor-icons/react";
 import {
   ArrowDownIcon,
+  ArrowLeftIcon,
   ArrowRightIcon,
   ArrowsClockwiseIcon,
   BookOpenTextIcon,
@@ -16,6 +18,8 @@ import {
   FlowArrowIcon,
   GearSixIcon,
   GraphIcon,
+  PauseIcon,
+  PlayIcon,
   ShieldCheckIcon,
   StudentIcon,
   TargetIcon,
@@ -34,6 +38,211 @@ type ArchitectureNode = {
 type ArchitectureDefinition = {
   defaultNode: string;
   nodes: ArchitectureNode[];
+};
+
+type DemoFrame = {
+  eyebrow: string;
+  title: string;
+  description: string;
+  proof: string;
+  source: string;
+  image?: string;
+  imageAlt?: string;
+  code?: {
+    filename: string;
+    language: string;
+    lines: string[];
+  };
+};
+
+const demoBySlug: Record<string, DemoFrame[]> = {
+  "ai-teaching-assistant": [
+    {
+      eyebrow: "01 / RUNNING SYSTEM",
+      title: "The learner experience starts from a real working interface",
+      description: "I built the student-facing learning center around persistent conversations, question history, practice records, and next-step support.",
+      proof: "Original system screenshot showing the implemented student home page and its production information architecture.",
+      source: "ORIGINAL SCREENSHOT · SYSTEM RUNNING INTERFACE",
+      image: "/project-demos/ai-teaching-assistant/process-01-system-interface.png",
+      imageAlt: "Original screenshot of the running AI teaching assistant student interface",
+    },
+    {
+      eyebrow: "02 / WORKFLOW BUILD",
+      title: "I orchestrated the answer path in Dify",
+      description: "Intent detection routes questions into practice, prerequisite lookup, course retrieval, or direct answering before the branches merge into one response.",
+      proof: "Original Dify canvas with the actual API, routing, RAG retrieval, graph lookup, and answer-generation nodes.",
+      source: "ORIGINAL SCREENSHOT · DIFY AI ASSISTANT WORKFLOW",
+      image: "/project-demos/ai-teaching-assistant/process-02-dify-workflow.png",
+      imageAlt: "Original Dify workflow screenshot for the AI assistant",
+    },
+    {
+      eyebrow: "03 / RETRIEVAL CONFIG",
+      title: "The evidence path is configured, not implied",
+      description: "The knowledge base uses text-embedding-3-large, hybrid retrieval, Top-K control, and weighted semantic and keyword matching.",
+      proof: "Original retrieval-settings screenshot records the embedding model, retrieval strategy, weighting, and Top-K value used in the system.",
+      source: "ORIGINAL SCREENSHOT · RAG KNOWLEDGE-BASE SETTINGS",
+      image: "/project-demos/ai-teaching-assistant/process-03-rag-config.png",
+      imageAlt: "Original RAG retrieval configuration screenshot",
+    },
+    {
+      eyebrow: "04 / GRAPH QUERY",
+      title: "Course structure is queried from real graph data",
+      description: "A Cypher query walks from a course to topics and deeper knowledge points, returning the hierarchy used for prerequisite-aware explanations and paths.",
+      proof: "Original query-and-result screenshot shows the executed course hierarchy query and returned nodes for the machine-learning course.",
+      source: "ORIGINAL SCREENSHOT · COURSE GRAPH QUERY RESULT",
+      image: "/project-demos/ai-teaching-assistant/process-04-kg-query.png",
+      imageAlt: "Original course knowledge graph query and result screenshot",
+    },
+    {
+      eyebrow: "05 / ANSWER RESULT",
+      title: "Retrieved evidence reaches the student answer",
+      description: "The student asks about KNN and receives a structured explanation with a visible retrieval citation instead of an unsupported model-only reply.",
+      proof: "Original application screenshot contains the real conversation history, question, grounded answer, and retrieval-source marker.",
+      source: "ORIGINAL SCREENSHOT · STUDENT QUESTION-ANSWER RESULT",
+      image: "/project-demos/ai-teaching-assistant/process-05-qa-result.png",
+      imageAlt: "Original AI teaching assistant question and grounded answer screenshot",
+    },
+    {
+      eyebrow: "06 / LEARNING REPORT",
+      title: "Stored attempts become an evidence-based report",
+      description: "The report reads answer history and mastery values, identifies weak knowledge points, lists recent mistakes, and proposes concrete review actions.",
+      proof: "Original report screenshot shows real attempt counts, mastery percentages, question IDs, timestamps, and generated next-step advice.",
+      source: "ORIGINAL SCREENSHOT · LEARNING REPORT RESULT",
+      image: "/project-demos/ai-teaching-assistant/process-06-learning-report.png",
+      imageAlt: "Original AI teaching assistant learning report screenshot",
+    },
+    {
+      eyebrow: "07 / LEARNING PATH",
+      title: "The same learner state drives the next study path",
+      description: "Weak topics are prioritized, prerequisite order is respected, and the response turns the mastery state into a sequenced study plan.",
+      proof: "Original path-planning screenshot exposes the mastery values, selected priority target, prerequisite order, and action plan used for the learner.",
+      source: "ORIGINAL SCREENSHOT · PERSONALIZED LEARNING PATH",
+      image: "/project-demos/ai-teaching-assistant/process-07-learning-path.png",
+      imageAlt: "Original personalized learning path result screenshot",
+    },
+  ],
+  "ccl25-hate-speech": [
+    {
+      eyebrow: "01 / OFFICIAL ENTRY",
+      title: "The project began as a real CCL25 competition entry",
+      description: "I registered for the official fine-grained Chinese hate-speech evaluation and built the project against its task and submission contract.",
+      proof: "Original Tianchi competition-page screenshot shows the registered CCL2025 fine-grained Chinese hate-speech task.",
+      source: "ORIGINAL SCREENSHOT · TIANCHI COMPETITION REGISTRATION",
+      image: "/project-demos/ccl25-hate-speech/process-01-competition-registration.png",
+      imageAlt: "Original screenshot of the registered CCL2025 competition page",
+    },
+    {
+      eyebrow: "02 / DATA CONVERSION",
+      title: "I converted the task data into supervised messages",
+      description: "The conversion script keeps each source comment, injects the complete quadruple instruction, and writes the gold output as the assistant response in JSONL.",
+      proof: "This is an excerpt from the actual utils/change.py that produced sft_data.jsonl and test_data.jsonl.",
+      source: "ORIGINAL SOURCE ARTIFACT · utils/change.py",
+      code: {
+        filename: "utils/change.py",
+        language: "PYTHON · DATA PREPARATION",
+        lines: [
+          "train_data = json.load(open('./train.json', 'r', encoding='utf-8'))",
+          "",
+          "for item in train_data:",
+          "    text = item['content']",
+          "    label = item['output']",
+          "    temp = {}",
+          "    temp['messages'] = [",
+          "        {'role': 'system', 'content': sys},",
+          "        {'role': 'user', 'content': text},",
+          "        {'role': 'assistant', 'content': label}",
+          "    ]",
+          "    train_file.write(json.dumps(temp, ensure_ascii=False) + '\\n')",
+        ],
+      },
+    },
+    {
+      eyebrow: "03 / LORA TRAINING",
+      title: "The final GLM run is reproducible from one script",
+      description: "The selected run uses GLM-4-9B, three epochs, cosine scheduling, 5e-5 learning rate, all-linear targets, rank 64, and alpha 128.",
+      proof: "This excerpt is taken from the actual scripts/sft.sh used for the rank-64 training run.",
+      source: "ORIGINAL SOURCE ARTIFACT · scripts/sft.sh",
+      code: {
+        filename: "scripts/sft.sh",
+        language: "SHELL · MS-SWIFT LORA TRAINING",
+        lines: [
+          "CUDA_VISIBLE_DEVICES=0 swift sft \\",
+          "  --model '../pretrain/GLM-4-9B-0414' \\",
+          "  --train_type lora \\",
+          "  --dataset ./sft_data.jsonl \\",
+          "  --num_train_epochs 3 \\",
+          "  --gradient_accumulation_steps 8 \\",
+          "  --lr_scheduler_type cosine \\",
+          "  --learning_rate 5e-5 \\",
+          "  --target_modules all-linear \\",
+          "  --lora_rank 64 \\",
+          "  --lora_alpha 128 \\",
+          "  --logging_steps 5",
+        ],
+      },
+    },
+    {
+      eyebrow: "04 / TRAINING LOSS",
+      title: "The rank-64 run converged across 1,488 steps",
+      description: "The training loss drops sharply in the first phase, then continues downward with a stable late-stage profile.",
+      proof: "Raw trainer export from glm-4-9b-0414 v1; its adapter_config records LoRA rank 64 and alpha 128.",
+      source: "ORIGINAL TRAINING ARTIFACT · GLM-4-9B V1 TRAIN LOSS",
+      image: "/project-demos/ccl25-hate-speech/process-04-train-loss.png",
+      imageAlt: "Original GLM-4-9B LoRA rank-64 training loss curve",
+    },
+    {
+      eyebrow: "05 / TOKEN ACCURACY",
+      title: "Token accuracy rises toward a stable plateau",
+      description: "The curve records rapid early learning followed by a sustained high-accuracy region throughout the remaining training steps.",
+      proof: "Raw token-accuracy export from the same GLM-4-9B rank-64 training directory.",
+      source: "ORIGINAL TRAINING ARTIFACT · GLM-4-9B V1 TOKEN ACC",
+      image: "/project-demos/ccl25-hate-speech/process-05-token-accuracy.png",
+      imageAlt: "Original GLM-4-9B LoRA rank-64 token accuracy curve",
+    },
+    {
+      eyebrow: "06 / GRADIENT STABILITY",
+      title: "The optimization becomes stable after the initial descent",
+      description: "Gradient norm falls from the initial high-variance phase and remains bounded for most of the run, with only occasional spikes.",
+      proof: "Raw gradient-norm export from the same GLM-4-9B rank-64 training directory.",
+      source: "ORIGINAL TRAINING ARTIFACT · GLM-4-9B V1 GRAD NORM",
+      image: "/project-demos/ccl25-hate-speech/process-06-gradient-norm.png",
+      imageAlt: "Original GLM-4-9B LoRA rank-64 gradient norm curve",
+    },
+    {
+      eyebrow: "07 / SUBMISSION BUILD",
+      title: "Predictions are converted into the required result file",
+      description: "The submission utility reads every inference response and writes one structured prediction per line without changing the generated quadruple format.",
+      proof: "This is an excerpt from the actual utils/submit.py used to create predict_result.txt.",
+      source: "ORIGINAL SOURCE ARTIFACT · utils/submit.py",
+      code: {
+        filename: "utils/submit.py",
+        language: "PYTHON · SUBMISSION FORMATTER",
+        lines: [
+          "with open('./predict_result.jsonl', 'r', encoding='utf-8') as f:",
+          "    preds = f.readlines()",
+          "",
+          "all_preds = []",
+          "for line in preds:",
+          "    line = json.loads(line)",
+          "    response = line['response']",
+          "    all_preds.append(response)",
+          "",
+          "with open('predict_result.txt', 'w', encoding='utf-8') as file:",
+          "    for item in all_preds:",
+          "        file.write(item + '\\n')",
+        ],
+      },
+    },
+    {
+      eyebrow: "08 / REPORTED OUTCOME",
+      title: "The work ends with a documented competition result",
+      description: "The final report records the working GLM-LoRA system, controlled comparisons, training evidence, and the submitted competition score.",
+      proof: "Project-report evidence combines the method summary with the captured competition result table.",
+      source: "PROJECT REPORT · FINAL OUTCOME AND COMPETITION RESULT",
+      image: "/project-demos/ccl25-hate-speech/05-project-outcome.png",
+      imageAlt: "Fine-grained hate speech project outcome and competition result",
+    },
+  ],
 };
 
 const architectureBySlug: Record<string, ArchitectureDefinition> = {
@@ -210,7 +419,23 @@ function ModuleButton({ node, selected, className = "", children, onSelect }: Mo
         <strong>{node.label}</strong>
         {children}
       </span>
-      <span className="architecture-module-action">VIEW MODULE ↗</span>
+      <span className="architecture-module-action" aria-hidden="true">
+        {selected ? "CLOSE DETAILS −" : "VIEW DETAILS +"}
+      </span>
+      <span className="architecture-module-inline-detail">
+        <span>
+          <b>ROLE</b>
+          <em>{node.role}</em>
+        </span>
+        <span>
+          <b>HOW IT WORKS</b>
+          <em>{node.implementation}</em>
+        </span>
+        <span>
+          <b>PROOF</b>
+          <em>{node.proof}</em>
+        </span>
+      </span>
     </button>
   );
 }
@@ -229,24 +454,74 @@ export default function ProjectUniverse() {
   const activeProject = projects[activeIndex];
   const architecture = architectureBySlug[activeProject.slug];
   const [selectedNodeId, setSelectedNodeId] = useState(architecture.defaultNode);
+  const [demoOpen, setDemoOpen] = useState(false);
+  const [demoFrameIndex, setDemoFrameIndex] = useState(0);
+  const [demoPlaying, setDemoPlaying] = useState(false);
   const selectedNode = architecture.nodes.find((node) => node.id === selectedNodeId) ?? null;
   const nodes = Object.fromEntries(architecture.nodes.map((node) => [node.id, node]));
+  const demoFrames = demoBySlug[activeProject.slug];
+  const demoFrame = demoFrames[demoFrameIndex];
 
   useEffect(() => {
-    if (!selectedNodeId) return;
-
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSelectedNodeId("");
+      if (event.key !== "Escape") return;
+      if (demoOpen) {
+        setDemoOpen(false);
+        setDemoPlaying(false);
+        return;
+      }
+      setSelectedNodeId("");
     };
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
-  }, [selectedNodeId]);
+  }, [demoOpen]);
+
+  useEffect(() => {
+    if (!demoOpen || !demoPlaying) return;
+
+    const advance = window.setTimeout(() => {
+      if (demoFrameIndex === demoFrames.length - 1) {
+        setDemoPlaying(false);
+        return;
+      }
+      setDemoFrameIndex((current) => current + 1);
+    }, 4800);
+
+    return () => window.clearTimeout(advance);
+  }, [demoFrameIndex, demoFrames.length, demoOpen, demoPlaying]);
 
   const selectProject = (index: number) => {
     const project = projects[index];
     setActiveIndex(index);
     setSelectedNodeId(architectureBySlug[project.slug].defaultNode);
+    setDemoOpen(false);
+    setDemoPlaying(false);
+    setDemoFrameIndex(0);
+  };
+
+  const openDemo = (index: number) => {
+    const project = projects[index];
+    setActiveIndex(index);
+    setSelectedNodeId(architectureBySlug[project.slug].defaultNode);
+    setDemoFrameIndex(0);
+    setDemoOpen(true);
+    setDemoPlaying(true);
+  };
+
+  const showDemoFrame = (index: number) => {
+    setDemoFrameIndex(index);
+    setDemoPlaying(false);
+  };
+
+  const moveDemo = (direction: -1 | 1) => {
+    setDemoFrameIndex((current) => Math.min(Math.max(current + direction, 0), demoFrames.length - 1));
+    setDemoPlaying(false);
+  };
+
+  const toggleDemoPlayback = () => {
+    if (!demoPlaying && demoFrameIndex === demoFrames.length - 1) setDemoFrameIndex(0);
+    setDemoPlaying((current) => !current);
   };
 
   const selectModule = (id: string) => {
@@ -278,7 +553,9 @@ export default function ProjectUniverse() {
               <article
                 className={activeIndex === index ? "active" : ""}
                 key={project.slug}
-                onPointerEnter={() => selectProject(index)}
+                onPointerEnter={() => {
+                  if (!demoOpen) selectProject(index);
+                }}
               >
                 <button type="button" onClick={() => selectProject(index)} aria-pressed={activeIndex === index}>
                   <span>0{index + 1}</span>
@@ -287,7 +564,13 @@ export default function ProjectUniverse() {
                 </button>
                 <div>
                   <span>{project.year}</span>
-                  <Link href={`/projects/${project.slug}`}>VIEW CASE STUDY ↗</Link>
+                  <span className="project-universe-actions">
+                    <Link href={`/projects/${project.slug}`}>VIEW CASE STUDY ↗</Link>
+                    <button type="button" onClick={() => openDemo(index)}>
+                      <PlayIcon size={12} weight="fill" aria-hidden="true" />
+                      PLAY DEMO
+                    </button>
+                  </span>
                 </div>
               </article>
             ))}
@@ -296,10 +579,87 @@ export default function ProjectUniverse() {
 
         <div className="architecture-stage">
           <div className="architecture-stage-heading">
-            <span>SYSTEM ARCHITECTURE / 0{activeIndex + 1}</span>
-            <span>SELECT A MODULE TO INSPECT</span>
+            <span>{demoOpen ? "PROJECT DEMO" : "SYSTEM ARCHITECTURE"} / 0{activeIndex + 1}</span>
+            <span>{demoOpen ? "REAL PROJECT MATERIAL · GUIDED PLAYBACK" : "SELECT A MODULE TO INSPECT"}</span>
           </div>
 
+          {demoOpen ? (
+            <section className={`project-demo-board ${demoPlaying ? "is-playing" : "is-paused"}`} aria-label={`${activeProject.title} project demo`}>
+              <header className="project-demo-toolbar">
+                <div>
+                  <span>PLAYBACK / {String(demoFrameIndex + 1).padStart(2, "0")} OF {String(demoFrames.length).padStart(2, "0")}</span>
+                  <strong>{activeProject.title}</strong>
+                </div>
+                <div className="project-demo-toolbar-actions">
+                  <button type="button" onClick={toggleDemoPlayback} aria-label={demoPlaying ? "Pause project demo" : "Play project demo"}>
+                    {demoPlaying ? <PauseIcon size={14} weight="fill" aria-hidden="true" /> : <PlayIcon size={14} weight="fill" aria-hidden="true" />}
+                    {demoPlaying ? "PAUSE" : demoFrameIndex === demoFrames.length - 1 ? "REPLAY" : "PLAY"}
+                  </button>
+                  <button type="button" onClick={() => { setDemoOpen(false); setDemoPlaying(false); }}>
+                    CLOSE ×
+                  </button>
+                </div>
+              </header>
+
+              <div className="project-demo-media" key={`${activeProject.slug}-${demoFrameIndex}`}>
+                {demoFrame.code ? (
+                  <div className="project-demo-code" aria-label={`${demoFrame.code.filename} source excerpt`}>
+                    <header>
+                      <span>{demoFrame.code.filename}</span>
+                      <span>{demoFrame.code.language}</span>
+                    </header>
+                    <pre><code>{demoFrame.code.lines.join("\n")}</code></pre>
+                  </div>
+                ) : demoFrame.image ? (
+                  <Image
+                    className="project-demo-image"
+                    src={demoFrame.image}
+                    alt={demoFrame.imageAlt ?? "Project process evidence"}
+                    fill
+                    sizes="(max-width: 820px) 100vw, 68vw"
+                    loading="eager"
+                  />
+                ) : null}
+                <span className="project-demo-scan" aria-hidden="true" />
+                <span className="project-demo-source">{demoFrame.source}</span>
+              </div>
+
+              <div className="project-demo-story" key={`${activeProject.slug}-${demoFrameIndex}-story`}>
+                <div>
+                  <span>{demoFrame.eyebrow}</span>
+                  <h3>{demoFrame.title}</h3>
+                </div>
+                <div className="project-demo-explanation">
+                  <p>{demoFrame.description}</p>
+                  <small><b>PROOF</b>{demoFrame.proof}</small>
+                </div>
+              </div>
+
+              <footer className="project-demo-controls">
+                <button type="button" onClick={() => moveDemo(-1)} disabled={demoFrameIndex === 0} aria-label="Previous demo frame">
+                  <ArrowLeftIcon size={16} weight="regular" aria-hidden="true" /> PREV
+                </button>
+                <div className="project-demo-steps" aria-label="Demo chapters">
+                  {demoFrames.map((frame, index) => (
+                    <button
+                      type="button"
+                      key={frame.eyebrow}
+                      className={index === demoFrameIndex ? "active" : ""}
+                      onClick={() => showDemoFrame(index)}
+                      aria-label={`Show ${frame.eyebrow}`}
+                      aria-current={index === demoFrameIndex ? "step" : undefined}
+                    >
+                      <span>0{index + 1}</span>
+                      <i aria-hidden="true" />
+                    </button>
+                  ))}
+                </div>
+                <button type="button" onClick={() => moveDemo(1)} disabled={demoFrameIndex === demoFrames.length - 1} aria-label="Next demo frame">
+                  NEXT <ArrowRightIcon size={16} weight="regular" aria-hidden="true" />
+                </button>
+              </footer>
+            </section>
+          ) : (
           <div className={`architecture-board architecture-board-${activeProject.slug}`}>
             <div className="architecture-canvas">
               {activeProject.slug === "ai-teaching-assistant" ? (
@@ -381,25 +741,34 @@ export default function ProjectUniverse() {
               aria-live="polite"
             >
               {selectedNode ? (
-                <div className="architecture-detail-grid">
-                  <div>
-                    <span><StudentIcon size={22} weight="light" aria-hidden="true" />ROLE</span>
-                    <p>{selectedNode.role}</p>
+                <>
+                  <header className="architecture-detail-heading">
+                    <span>MODULE / {selectedNode.label}</span>
+                    <button type="button" onClick={() => setSelectedNodeId("")} aria-label="Close module details">
+                      CLOSE ×
+                    </button>
+                  </header>
+                  <div className="architecture-detail-grid">
+                    <div>
+                      <span><StudentIcon size={22} weight="light" aria-hidden="true" />ROLE</span>
+                      <p>{selectedNode.role}</p>
+                    </div>
+                    <div>
+                      <span><GearSixIcon size={22} weight="light" aria-hidden="true" />HOW IT WORKS</span>
+                      <p>{selectedNode.implementation}</p>
+                    </div>
+                    <div>
+                      <span><ShieldCheckIcon size={22} weight="light" aria-hidden="true" />PROOF</span>
+                      <p>{selectedNode.proof}</p>
+                    </div>
                   </div>
-                  <div>
-                    <span><GearSixIcon size={22} weight="light" aria-hidden="true" />HOW IT WORKS</span>
-                    <p>{selectedNode.implementation}</p>
-                  </div>
-                  <div>
-                    <span><ShieldCheckIcon size={22} weight="light" aria-hidden="true" />PROOF</span>
-                    <p>{selectedNode.proof}</p>
-                  </div>
-                </div>
+                </>
               ) : (
                 <p>Select a framed module to see its role, implementation, and evidence.</p>
               )}
             </aside>
           </div>
+          )}
         </div>
       </div>
     </section>
