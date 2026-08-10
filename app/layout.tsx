@@ -51,7 +51,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${geist.variable} ${geistMono.variable}`}>
+      <head>
+        <meta name="google" content="notranslate" />
+      </head>
+      <body className={`${geist.variable} ${geistMono.variable} notranslate`}>
         <AsciiTransitionProvider>{children}</AsciiTransitionProvider>
       </body>
     </html>

@@ -542,7 +542,6 @@ export default function ProjectUniverse() {
   return (
     <section className="project-universe" aria-label="Selected work">
       <div className="project-universe-meta">
-        <span>WORK / 02</span>
         <span>RESEARCH SYSTEMS · BUILDING WITH CONTEXT</span>
       </div>
 

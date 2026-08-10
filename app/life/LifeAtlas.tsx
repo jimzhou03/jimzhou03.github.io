@@ -39,17 +39,22 @@ const vehicleAssets: Record<TransitMode, string> = {
 };
 
 function VehicleIcon({ mode }: { mode: TransitMode }) {
-  const size = mode === "plane" ? 24 : 21;
+  const size = mode === "plane" ? 30 : 27;
+  const markerRadius = mode === "plane" ? 20 : 18;
   return (
-    <image
-      className={`life-atlas-vehicle-icon is-${mode}`}
-      href={vehicleAssets[mode]}
-      x={-size / 2}
-      y={-size / 2}
-      width={size}
-      height={size}
-      aria-hidden="true"
-    />
+    <>
+      <circle className="life-atlas-vehicle-marker" r={markerRadius} aria-hidden="true" />
+      <image
+        className={`life-atlas-vehicle-icon is-${mode}`}
+        href={vehicleAssets[mode]}
+        xlinkHref={vehicleAssets[mode]}
+        x={-size / 2}
+        y={-size / 2}
+        width={size}
+        height={size}
+        aria-hidden="true"
+      />
+    </>
   );
 }
 
@@ -105,8 +110,10 @@ export default function LifeAtlas() {
     const routeLayer = routeLayerRef.current;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const routeLength = progressPath.getTotalLength();
-    const travelDuration = motionRoute.mode === "bus" ? 1.3 : motionRoute.mode === "train" ? 1.45 : 1.72;
+    const travelDuration = motionRoute.mode === "bus" ? 2.2 : motionRoute.mode === "train" ? 2.35 : 2.75;
+    const effectiveTravelDuration = reduceMotion ? 1.1 : travelDuration;
     const routeProxy = { distance: 0 };
+    const startPoint = progressPath.getPointAtLength(0);
 
     const revealArchive = (onComplete?: () => void) => {
       if (!archive) {
@@ -171,7 +178,11 @@ export default function LifeAtlas() {
     gsap.set(routeLayer, { opacity: 1 });
     gsap.set(progressPath, {
       strokeDasharray: routeLength,
-      strokeDashoffset: reduceMotion ? 0 : routeLength,
+      strokeDashoffset: routeLength,
+    });
+    gsap.set(vehicle, {
+      opacity: 1,
+      attr: { transform: `translate(${startPoint.x} ${startPoint.y}) rotate(0)` },
     });
 
     if (motionRoute.kind === "international" && archive) {
@@ -182,38 +193,28 @@ export default function LifeAtlas() {
       );
     }
 
-    if (reduceMotion) {
-      gsap.set(vehicle, { opacity: 0 });
-      const delayedFinish = gsap.delayedCall(0.24, finishJourney);
-      return () => {
-        delayedFinish.kill();
-        gsap.killTweensOf([archive, progressPath, vehicle, routeLayer, routeProxy]);
-      };
-    }
-
-    gsap.set(vehicle, { opacity: 1 });
     const timeline = gsap.timeline({ onComplete: finishJourney });
 
     timeline.to(
       progressPath,
-      { strokeDashoffset: 0, duration: travelDuration, ease: "power2.inOut" },
+      { strokeDashoffset: 0, duration: effectiveTravelDuration, ease: "power2.inOut" },
       0,
     );
     timeline.to(
       routeProxy,
       {
         distance: routeLength,
-        duration: travelDuration,
+        duration: effectiveTravelDuration,
         ease: "power2.inOut",
         onUpdate: () => {
           if (!vehicle) return;
           const point = progressPath.getPointAtLength(routeProxy.distance);
           const next = progressPath.getPointAtLength(Math.min(routeLength, routeProxy.distance + 1));
           const direction = Math.atan2(next.y - point.y, next.x - point.x) * (180 / Math.PI);
-          const wobble = motionRoute.mode === "bus"
+          const wobble = motionRoute.mode === "bus" && !reduceMotion
             ? Math.sin((routeProxy.distance / routeLength) * Math.PI * 8) * 3
             : 0;
-          const lift = motionRoute.mode === "bus"
+          const lift = motionRoute.mode === "bus" && !reduceMotion
             ? Math.sin((routeProxy.distance / routeLength) * Math.PI * 6) * 1.5
             : 0;
           const rotation = direction + 90 + wobble;
@@ -231,7 +232,7 @@ export default function LifeAtlas() {
       timeline.to(
         archive,
         { opacity: 0, y: 12, duration: 0.42, ease: "power2.inOut" },
-        travelDuration - 0.36,
+        effectiveTravelDuration - 0.36,
       );
     } else {
       timeline.fromTo(
@@ -242,7 +243,7 @@ export default function LifeAtlas() {
       );
     }
 
-    timeline.to(vehicle, { opacity: 0, duration: 0.18, ease: "power1.out" }, travelDuration - 0.02);
+    timeline.to(vehicle, { opacity: 0, duration: 0.22, ease: "power1.out" }, effectiveTravelDuration + 0.28);
 
     return () => {
       timeline.kill();
@@ -329,7 +330,14 @@ export default function LifeAtlas() {
     ? "GUANGZHOU → FRANKFURT"
     : germanyStage === "frankfurtToHeidelberg"
       ? "FRANKFURT → HEIDELBERG"
-      : null;
+      : chinaRoute
+        ? `${lifeLocations[chinaRoute.from as CityId].label} → ${lifeLocations[chinaRoute.to as CityId].label}`
+        : null;
+  const transitModeLabel = motionRoute?.mode === "plane"
+    ? "AIR"
+    : motionRoute?.mode === "train"
+      ? "RAIL"
+      : "ROAD";
 
   return (
     <main
@@ -518,7 +526,7 @@ export default function LifeAtlas() {
             <>
               <span>TRANSIT</span>
               <strong>{transitLabel}</strong>
-              <span>BY {lifeView === "chinaToGermany" ? "AIR" : "RAIL"}</span>
+              <span>BY {transitModeLabel}</span>
             </>
           ) : isChina ? (
             <>

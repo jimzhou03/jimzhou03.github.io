@@ -343,10 +343,18 @@
 
 .life-atlas-vehicle {
   transform-origin: 0 0;
+  filter: drop-shadow(0 3px 5px rgba(10, 10, 9, .24));
+}
+
+.life-atlas-vehicle-marker {
+  fill: rgba(246, 243, 234, .96);
+  stroke: rgba(10, 10, 9, .72);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
 }
 
 .life-atlas-vehicle-icon {
-  filter: contrast(1.2);
+  filter: contrast(1.35);
 }
 
 .life-atlas-map-nodes {
