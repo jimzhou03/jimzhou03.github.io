@@ -418,9 +418,6 @@ function ModuleButton({ node, selected, className = "", children, onSelect }: Mo
         <strong>{node.label}</strong>
         {children}
       </span>
-      <span className="architecture-module-action" aria-hidden="true">
-        {selected ? "CLOSE DETAILS −" : "VIEW DETAILS +"}
-      </span>
       <span className="architecture-module-inline-detail">
         <span>
           <b>MODULE ROLE</b>

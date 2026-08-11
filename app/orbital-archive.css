@@ -2232,29 +2232,8 @@ body {
   line-height: 1.65;
 }
 
-.architecture-module-action {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  padding-bottom: 2px;
-  color: rgba(10,10,9,.58);
-  border-bottom: 1px solid currentColor;
-  font: 7px var(--font-mono);
-  letter-spacing: .06em;
-  opacity: 0;
-  transform: translateY(3px);
-  transition: opacity 160ms ease, transform 160ms ease;
-}
-
 .architecture-module-inline-detail {
   display: none;
-}
-
-.architecture-module:hover .architecture-module-action,
-.architecture-module:focus-visible .architecture-module-action,
-.architecture-module.active .architecture-module-action {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 .architecture-flow-arrow {
@@ -3993,12 +3972,13 @@ body {
   font: 13px/1.5 var(--font-mono);
 }
 
-.gravity-education span {
+.gravity-education-entry > span {
+  display: block;
   position: relative;
   padding-left: 14px;
 }
 
-.gravity-education span::before {
+.gravity-education-entry > span::before {
   position: absolute;
   top: .62em;
   left: 0;
@@ -4007,6 +3987,37 @@ body {
   border-radius: 50%;
   background: currentColor;
   content: "";
+}
+
+.gravity-degree-honors {
+  width: min(calc(100% - 2ch), 470px);
+  margin: 4px 0 0 2ch;
+  padding: 0;
+  display: grid;
+  gap: 1px;
+  color: rgba(10,10,9,.76);
+  list-style: none;
+}
+
+.gravity-degree-honors li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1.25ch;
+  align-items: baseline;
+}
+
+.gravity-degree-honors li > span {
+  min-width: 0;
+}
+
+.gravity-degree-honors time {
+  color: rgba(10,10,9,.48);
+  text-align: right;
+}
+
+.gravity-degree-honors time::before {
+  margin-right: 1.25ch;
+  content: "·";
 }
 
 .gravity-cta {
@@ -5819,7 +5830,7 @@ html[data-ascii-transition="active"] {
 
 @media (max-width: 760px) {
   .gravity-copy h1.gravity-identity { font-size: clamp(38px, 10.5vw, 56px); }
-  .gravity-copy > p.gravity-discipline { font-size: clamp(27px, 8vw, 38px); }
+  .gravity-copy > p.gravity-discipline { font-size: clamp(24px, 7vw, 32px); }
   .gravity-copy { min-height: 450px; }
 
   .case-study-hero {

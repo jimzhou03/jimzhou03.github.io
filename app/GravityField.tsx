@@ -39,6 +39,8 @@ const languageTokens = [
   "RAG",
 ];
 
+const STREAM_SPEED = 2.75;
+
 export default function GravityField() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const eventHorizonRef = useRef<HTMLSpanElement>(null);
@@ -81,9 +83,9 @@ export default function GravityField() {
               ? 0.9 + Math.random() * 1.35
               : 0.32 + Math.random() * 0.7;
       particle.stretch = 0.72 + Math.random() * 0.8;
-      particle.baseSpeed = 0.4 + Math.random() * 0.76 + particle.size * 0.016;
+      particle.baseSpeed = (0.4 + Math.random() * 0.76 + particle.size * 0.016) * STREAM_SPEED;
       particle.vx = particle.baseSpeed;
-      particle.vy = (Math.random() - 0.5) * 0.035;
+      particle.vy = (Math.random() - 0.5) * 0.055;
       particle.alpha = 0.18 + Math.random() * 0.66;
     };
 
@@ -94,7 +96,7 @@ export default function GravityField() {
         : -70 - Math.random() * width * 0.75;
       token.baseY = streamY(token.lane, 5) + (token.index % 2 ? 13 : -10);
       token.y = token.baseY;
-      token.baseSpeed = 0.18 + (token.index % 3) * 0.035;
+      token.baseSpeed = (0.18 + (token.index % 3) * 0.035) * STREAM_SPEED;
       token.alpha = token.index < 5 ? 0.76 : 0.54;
       token.size = token.index < 5 ? 20 : 15;
     };
@@ -208,7 +210,7 @@ export default function GravityField() {
         particle.vy *= 0.991;
 
         const speed = Math.hypot(particle.vx, particle.vy);
-        const maxSpeed = 4.8;
+        const maxSpeed = 4.8 * STREAM_SPEED;
         if (speed > maxSpeed) {
           particle.vx = (particle.vx / speed) * maxSpeed;
           particle.vy = (particle.vy / speed) * maxSpeed;
@@ -229,7 +231,8 @@ export default function GravityField() {
         }
 
         const nearHorizon = nextDistance < blackHole.radius * 1.36;
-        const trailLength = Math.min(30, 7 + Math.hypot(particle.vx, particle.vy) * 7);
+        const particleSpeed = Math.max(0.01, Math.hypot(particle.vx, particle.vy));
+        const trailLength = Math.min(46, 9 + particleSpeed * 7.5);
         const particleColor = nearHorizon ? "242,239,231" : "10,10,9";
         const fade =
           nextDistance < blackHole.radius * 1.08
@@ -240,8 +243,8 @@ export default function GravityField() {
         context.lineWidth = nearHorizon ? 0.85 : 0.5;
         context.beginPath();
         context.moveTo(
-          particle.x - particle.vx * trailLength,
-          particle.y - particle.vy * trailLength,
+          particle.x - (particle.vx / particleSpeed) * trailLength,
+          particle.y - (particle.vy / particleSpeed) * trailLength,
         );
         context.lineTo(particle.x, particle.y);
         context.stroke();
