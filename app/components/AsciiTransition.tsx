@@ -218,7 +218,7 @@ export function AsciiTransitionProvider({ children }: { children: ReactNode }) {
         activeRef.current = false;
         setPhase("idle");
         window.requestAnimationFrame(() => {
-          const heading = document.querySelector<HTMLElement>("h1");
+          const heading = document.querySelector<HTMLElement>("[data-route-focus], h1");
           if (!heading) return;
           heading.classList.add("ascii-transition-focus-target");
           heading.tabIndex = -1;

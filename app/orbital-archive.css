@@ -1892,6 +1892,15 @@ body {
   background: #050505;
 }
 
+.project-route-title {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .project-universe-meta {
   position: absolute;
   z-index: 5;
@@ -1934,8 +1943,7 @@ body {
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
-.project-universe-list article.active,
-.project-universe-list article:hover {
+.project-universe-list article.active {
   opacity: 1;
   transform: translateX(10px);
 }
@@ -2592,6 +2600,123 @@ body {
   border: 1px solid rgba(10,10,9,.34);
 }
 
+.project-demo-media.is-brief {
+  overflow: auto;
+  background: #f3f0e8;
+}
+
+.project-demo-brief {
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: minmax(210px, .72fr) minmax(0, 1.55fr);
+  animation: project-demo-wipe 820ms cubic-bezier(.22,.76,.2,1) both;
+}
+
+.project-demo-brief-lead {
+  padding: clamp(22px, 2.4vw, 38px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid rgba(10,10,9,.26);
+}
+
+.project-demo-brief span {
+  color: rgba(10,10,9,.48);
+  font: 8px var(--font-mono);
+  letter-spacing: .11em;
+}
+
+.project-demo-brief-lead h3 {
+  margin: auto 0 18px;
+  font-family: var(--serif);
+  font-size: clamp(25px, 2.3vw, 38px);
+  font-weight: 400;
+  line-height: .98;
+  letter-spacing: -.045em;
+}
+
+.project-demo-brief-lead p,
+.project-demo-brief-grid p {
+  margin: 0;
+  color: rgba(10,10,9,.7);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.project-demo-brief-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-content: stretch;
+}
+
+.project-demo-brief-grid article {
+  min-width: 0;
+  padding: clamp(17px, 1.65vw, 27px);
+  border-bottom: 1px solid rgba(10,10,9,.2);
+}
+
+.project-demo-brief-grid article:nth-child(even) {
+  border-left: 1px solid rgba(10,10,9,.2);
+}
+
+.project-demo-brief-grid article > p {
+  margin-top: 12px;
+}
+
+.project-demo-brief-stack ul {
+  margin: 12px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+}
+
+.project-demo-brief-stack li {
+  padding: 5px 7px;
+  color: rgba(10,10,9,.72);
+  border: 1px solid rgba(10,10,9,.28);
+  border-radius: 2px;
+  font: 7px var(--font-mono);
+  letter-spacing: .05em;
+}
+
+.project-demo-brief-route ol {
+  margin: 13px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  list-style: none;
+}
+
+.project-demo-brief-route li {
+  display: flex;
+  gap: 8px;
+  color: rgba(10,10,9,.72);
+  font: 8px var(--font-mono);
+  letter-spacing: .06em;
+}
+
+.project-demo-brief-route b {
+  color: rgba(10,10,9,.38);
+  font-weight: 400;
+}
+
+.project-demo-brief-grid .project-demo-brief-outcome {
+  grid-column: 1 / -1;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.project-demo-brief-outcome small {
+  margin-top: 10px;
+  display: block;
+  color: rgba(10,10,9,.48);
+  font: 7px/1.5 var(--font-mono);
+  letter-spacing: .07em;
+}
+
 .project-demo-image {
   object-fit: contain;
   background: #f7f5ef;
@@ -2805,6 +2930,155 @@ body {
 
 .project-demo-board.is-playing .project-demo-steps button.active i::after {
   animation: project-demo-progress 4800ms linear both;
+}
+
+/* Keep the desktop Work desk inside one viewport. */
+@media (min-width: 821px) {
+  .site-frame:has(.project-universe),
+  .site-frame:has(.project-universe) .page-shell {
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  .project-universe,
+  .project-universe-layout {
+    height: calc(100svh - 82px);
+    min-height: 0;
+  }
+
+  .project-universe-meta { top: 18px; }
+
+  .project-universe-index {
+    min-height: 0;
+    padding: 18px 22px 18px 18px;
+  }
+
+  .project-universe-list {
+    height: 100%;
+    display: grid;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+  }
+
+  .project-universe-list article {
+    min-height: 0;
+    padding: clamp(18px, 2.8vh, 30px) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .project-universe-list h2 {
+    margin: 12px 0 10px;
+    font-size: clamp(28px, 2.15vw, 38px);
+  }
+
+  .project-universe-list article > div { margin-top: 14px; }
+
+  .architecture-stage {
+    height: 100%;
+    min-height: 0;
+    padding: 40px 0 18px 24px;
+  }
+
+  .architecture-stage-heading {
+    margin-bottom: 10px;
+    font-size: 10px;
+  }
+
+  .architecture-board,
+  .project-demo-board {
+    height: auto;
+    min-height: 0;
+    flex: 1;
+  }
+
+  .architecture-canvas {
+    padding: 14px 18px 58px;
+    overflow: hidden;
+  }
+
+  .architecture-diagram-section { padding-bottom: 10px; }
+
+  .architecture-diagram-section + .architecture-diagram-section {
+    padding-top: 10px;
+  }
+
+  .architecture-diagram-section h3 { margin-bottom: 10px; }
+
+  .architecture-module { min-height: 86px; padding: 11px 10px 9px; }
+  .architecture-ai-loop { padding-bottom: 10px; }
+  .architecture-ai-loop .architecture-module { min-height: 78px; }
+  .architecture-loop-return { margin-top: 5px; }
+  .architecture-foundation .architecture-module { min-height: 46px; padding-block: 7px; }
+  .architecture-ccl-inference .architecture-module { min-height: 118px; }
+  .architecture-ccl-training .architecture-module { min-height: 106px; }
+
+  .architecture-detail {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+
+  .architecture-detail.open {
+    max-height: 176px;
+    padding-top: 13px;
+    padding-bottom: 16px;
+  }
+
+  .architecture-detail-heading {
+    margin-bottom: 11px;
+    padding-bottom: 8px;
+  }
+
+  .architecture-detail-grid p {
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.45;
+  }
+
+  .project-demo-toolbar { min-height: 56px; padding-block: 10px; }
+  .project-demo-media { margin: 12px 14px 0; }
+  .project-demo-story { min-height: 102px; padding: 13px 14px; }
+  .project-demo-story h3 { font-size: clamp(20px, 1.75vw, 27px); }
+  .project-demo-controls { min-height: 48px; padding-block: 7px; }
+}
+
+@media (min-width: 821px) and (max-height: 760px) {
+  .project-universe-meta { display: none; }
+  .project-universe-index { padding-top: 10px; padding-bottom: 10px; }
+  .project-universe-list article { padding-block: 12px; }
+  .project-universe-list h2 { margin-block: 9px 7px; font-size: clamp(26px, 2vw, 34px); }
+  .project-universe-list article > div { margin-top: 10px; }
+
+  .architecture-stage { padding-top: 26px; padding-bottom: 10px; }
+  .architecture-canvas { padding-top: 10px; padding-bottom: 48px; }
+  .architecture-diagram-section { padding-bottom: 7px; }
+  .architecture-diagram-section + .architecture-diagram-section { padding-top: 7px; }
+  .architecture-diagram-section h3 { margin-bottom: 7px; font-size: 9px; }
+  .architecture-module { min-height: 70px; }
+  .architecture-ai-loop .architecture-module { min-height: 66px; }
+  .architecture-foundation .architecture-module { min-height: 42px; }
+  .architecture-ccl-inference .architecture-module { min-height: 96px; padding-block: 10px; }
+  .architecture-ccl-training .architecture-module { min-height: 84px; padding-block: 8px; }
+  .architecture-ccl-inference .architecture-module-copy { gap: 6px; }
+  .architecture-comment-sample,
+  .architecture-schema-row { padding-block: 6px; font-size: 8px; }
+  .architecture-metric { padding-block: 4px; font-size: 8px; }
+  .architecture-legend { padding-top: 7px; }
+  .architecture-detail.open { max-height: 150px; }
+
+  .project-demo-toolbar { min-height: 50px; }
+  .project-demo-story { min-height: 92px; padding-block: 10px; }
+  .project-demo-story h3 { font-size: clamp(18px, 1.6vw, 24px); }
+  .project-demo-story p { font-size: 10px; }
+  .project-demo-explanation small { padding-top: 7px; }
+  .project-demo-controls { min-height: 42px; }
+  .project-demo-brief-lead { padding: 20px; }
+  .project-demo-brief-grid article { padding: 14px 17px; }
+  .project-demo-brief-grid article > p,
+  .project-demo-brief-stack ul,
+  .project-demo-brief-route ol { margin-top: 8px; }
 }
 
 @keyframes project-demo-wipe {
@@ -4314,6 +4588,24 @@ body {
     padding: 18px 0 42px;
   }
 
+  .architecture-stage:has(.project-demo-board) {
+    position: fixed;
+    z-index: 35;
+    top: 72px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    min-height: 0;
+    padding: 12px 14px 16px;
+    overflow: hidden;
+    background: #050505;
+  }
+
+  .architecture-stage:has(.project-demo-board) .project-demo-board {
+    min-height: 0;
+    flex: 1;
+  }
+
   .architecture-stage-heading {
     font-size: 10px;
   }
@@ -4345,6 +4637,12 @@ body {
     min-height: auto;
     aspect-ratio: 16 / 9;
     flex: 0 0 auto;
+  }
+
+  .project-demo-media.is-brief {
+    min-height: 0;
+    aspect-ratio: auto;
+    flex: 1 1 auto;
   }
 
   .project-demo-story {
@@ -4539,6 +4837,35 @@ body {
 
   .project-demo-media {
     margin: 12px 12px 0;
+  }
+
+  .project-demo-brief {
+    grid-template-columns: 1fr;
+  }
+
+  .project-demo-brief-lead {
+    padding: 18px;
+    border-right: 0;
+    border-bottom: 1px solid rgba(10,10,9,.22);
+  }
+
+  .project-demo-brief-lead h3 {
+    margin: 22px 0 12px;
+    font-size: 26px;
+  }
+
+  .project-demo-brief-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-demo-brief-grid article,
+  .project-demo-brief-grid article:nth-child(even) {
+    padding: 16px 18px;
+    border-left: 0;
+  }
+
+  .project-demo-brief-grid .project-demo-brief-outcome {
+    grid-column: auto;
   }
 
   .project-demo-code header {

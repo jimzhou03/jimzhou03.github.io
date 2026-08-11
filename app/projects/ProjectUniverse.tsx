@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Icon } from "@phosphor-icons/react";
 import {
   ArrowDownIcon,
@@ -46,6 +45,7 @@ type DemoFrame = {
   description: string;
   proof: string;
   source: string;
+  brief?: (typeof projects)[number]["brief"];
   image?: string;
   imageAlt?: string;
   code?: {
@@ -55,8 +55,24 @@ type DemoFrame = {
   };
 };
 
+const projectBySlug = Object.fromEntries(projects.map((project) => [project.slug, project]));
+
+const briefFrame = (slug: string): DemoFrame => {
+  const project = projectBySlug[slug];
+
+  return {
+    eyebrow: "00 / PROJECT BRIEF",
+    title: project.summary,
+    description: project.question,
+    proof: project.brief.evidence,
+    source: "PROJECT BRIEF · VERIFIED FROM ORIGINAL MATERIAL",
+    brief: project.brief,
+  };
+};
+
 const demoBySlug: Record<string, DemoFrame[]> = {
   "ai-teaching-assistant": [
+    briefFrame("ai-teaching-assistant"),
     {
       eyebrow: "01 / RUNNING SYSTEM",
       title: "The learner experience starts from a real working interface",
@@ -122,6 +138,7 @@ const demoBySlug: Record<string, DemoFrame[]> = {
     },
   ],
   "ccl25-hate-speech": [
+    briefFrame("ccl25-hate-speech"),
     {
       eyebrow: "01 / OFFICIAL ENTRY",
       title: "The project began as a real CCL25 competition entry",
@@ -191,25 +208,7 @@ const demoBySlug: Record<string, DemoFrame[]> = {
       imageAlt: "Original GLM-4-9B LoRA rank-64 training loss curve",
     },
     {
-      eyebrow: "05 / TOKEN ACCURACY",
-      title: "Token accuracy rises toward a stable plateau",
-      description: "The curve records rapid early learning followed by a sustained high-accuracy region throughout the remaining training steps.",
-      proof: "Raw token-accuracy export from the same GLM-4-9B rank-64 training directory.",
-      source: "ORIGINAL TRAINING ARTIFACT · GLM-4-9B V1 TOKEN ACC",
-      image: "/project-demos/ccl25-hate-speech/process-05-token-accuracy.png",
-      imageAlt: "Original GLM-4-9B LoRA rank-64 token accuracy curve",
-    },
-    {
-      eyebrow: "06 / GRADIENT STABILITY",
-      title: "The optimization becomes stable after the initial descent",
-      description: "Gradient norm falls from the initial high-variance phase and remains bounded for most of the run, with only occasional spikes.",
-      proof: "Raw gradient-norm export from the same GLM-4-9B rank-64 training directory.",
-      source: "ORIGINAL TRAINING ARTIFACT · GLM-4-9B V1 GRAD NORM",
-      image: "/project-demos/ccl25-hate-speech/process-06-gradient-norm.png",
-      imageAlt: "Original GLM-4-9B LoRA rank-64 gradient norm curve",
-    },
-    {
-      eyebrow: "07 / SUBMISSION BUILD",
+      eyebrow: "05 / SUBMISSION BUILD",
       title: "Predictions are converted into the required result file",
       description: "The submission utility reads every inference response and writes one structured prediction per line without changing the generated quadruple format.",
       proof: "This is an excerpt from the actual utils/submit.py used to create predict_result.txt.",
@@ -234,7 +233,7 @@ const demoBySlug: Record<string, DemoFrame[]> = {
       },
     },
     {
-      eyebrow: "08 / REPORTED OUTCOME",
+      eyebrow: "06 / REPORTED OUTCOME",
       title: "The work ends with a documented competition result",
       description: "The final report records the working GLM-LoRA system, controlled comparisons, training evidence, and the submitted competition score.",
       proof: "Project-report evidence combines the method summary with the captured competition result table.",
@@ -424,7 +423,7 @@ function ModuleButton({ node, selected, className = "", children, onSelect }: Mo
       </span>
       <span className="architecture-module-inline-detail">
         <span>
-          <b>ROLE</b>
+          <b>MODULE ROLE</b>
           <em>{node.role}</em>
         </span>
         <span>
@@ -453,21 +452,31 @@ export default function ProjectUniverse() {
   const [activeIndex, setActiveIndex] = useState(0);
   const activeProject = projects[activeIndex];
   const architecture = architectureBySlug[activeProject.slug];
-  const [selectedNodeId, setSelectedNodeId] = useState(architecture.defaultNode);
+  const [selectedNodeId, setSelectedNodeId] = useState("");
   const [demoOpen, setDemoOpen] = useState(false);
   const [demoFrameIndex, setDemoFrameIndex] = useState(0);
   const [demoPlaying, setDemoPlaying] = useState(false);
+  const [caseStudyOpenerIndex, setCaseStudyOpenerIndex] = useState(0);
+  const caseStudyTriggerRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const caseStudyBoardRef = useRef<HTMLElement | null>(null);
   const selectedNode = architecture.nodes.find((node) => node.id === selectedNodeId) ?? null;
   const nodes = Object.fromEntries(architecture.nodes.map((node) => [node.id, node]));
   const demoFrames = demoBySlug[activeProject.slug];
   const demoFrame = demoFrames[demoFrameIndex];
 
+  const closeCaseStudy = useCallback((restoreFocus = true) => {
+    setDemoOpen(false);
+    setDemoPlaying(false);
+    if (restoreFocus) {
+      window.requestAnimationFrame(() => caseStudyTriggerRefs.current[caseStudyOpenerIndex]?.focus());
+    }
+  }, [caseStudyOpenerIndex]);
+
   useEffect(() => {
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       if (demoOpen) {
-        setDemoOpen(false);
-        setDemoPlaying(false);
+        closeCaseStudy();
         return;
       }
       setSelectedNodeId("");
@@ -475,6 +484,11 @@ export default function ProjectUniverse() {
 
     window.addEventListener("keydown", closeOnEscape);
     return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [closeCaseStudy, demoOpen]);
+
+  useEffect(() => {
+    if (!demoOpen) return;
+    window.requestAnimationFrame(() => caseStudyBoardRef.current?.focus());
   }, [demoOpen]);
 
   useEffect(() => {
@@ -492,21 +506,20 @@ export default function ProjectUniverse() {
   }, [demoFrameIndex, demoFrames.length, demoOpen, demoPlaying]);
 
   const selectProject = (index: number) => {
-    const project = projects[index];
     setActiveIndex(index);
-    setSelectedNodeId(architectureBySlug[project.slug].defaultNode);
+    setSelectedNodeId("");
     setDemoOpen(false);
     setDemoPlaying(false);
     setDemoFrameIndex(0);
   };
 
-  const openDemo = (index: number) => {
-    const project = projects[index];
+  const openCaseStudy = (index: number) => {
     setActiveIndex(index);
-    setSelectedNodeId(architectureBySlug[project.slug].defaultNode);
+    setSelectedNodeId("");
     setDemoFrameIndex(0);
+    setCaseStudyOpenerIndex(index);
     setDemoOpen(true);
-    setDemoPlaying(true);
+    setDemoPlaying(false);
   };
 
   const showDemoFrame = (index: number) => {
@@ -541,6 +554,7 @@ export default function ProjectUniverse() {
 
   return (
     <section className="project-universe" aria-label="Selected work">
+      <h1 className="project-route-title" data-route-focus tabIndex={-1}>Selected Work — NLP and Language Systems</h1>
       <div className="project-universe-meta">
         <span>RESEARCH SYSTEMS · BUILDING WITH CONTEXT</span>
       </div>
@@ -549,13 +563,7 @@ export default function ProjectUniverse() {
         <div className="project-universe-index">
           <div className="project-universe-list">
             {projects.map((project, index) => (
-              <article
-                className={activeIndex === index ? "active" : ""}
-                key={project.slug}
-                onPointerEnter={() => {
-                  if (!demoOpen) selectProject(index);
-                }}
-              >
+              <article className={activeIndex === index ? "active" : ""} key={project.slug}>
                 <button type="button" onClick={() => selectProject(index)} aria-pressed={activeIndex === index}>
                   <span>0{index + 1}</span>
                   <h2>{project.title}</h2>
@@ -564,10 +572,14 @@ export default function ProjectUniverse() {
                 <div>
                   <span>{project.year}</span>
                   <span className="project-universe-actions">
-                    <Link href={`/projects/${project.slug}`}>VIEW CASE STUDY ↗</Link>
-                    <button type="button" onClick={() => openDemo(index)}>
-                      <PlayIcon size={12} weight="fill" aria-hidden="true" />
-                      PLAY DEMO
+                    <button
+                      ref={(element) => { caseStudyTriggerRefs.current[index] = element; }}
+                      type="button"
+                      onClick={() => openCaseStudy(index)}
+                      aria-expanded={demoOpen && activeIndex === index}
+                      aria-controls="project-case-study"
+                    >
+                      EXPLORE CASE STUDY →
                     </button>
                   </span>
                 </div>
@@ -578,15 +590,21 @@ export default function ProjectUniverse() {
 
         <div className="architecture-stage">
           <div className="architecture-stage-heading">
-            <span>{demoOpen ? "PROJECT DEMO" : "SYSTEM ARCHITECTURE"} / 0{activeIndex + 1}</span>
-            <span>{demoOpen ? "REAL PROJECT MATERIAL · GUIDED PLAYBACK" : "SELECT A MODULE TO INSPECT"}</span>
+            <span>{demoOpen ? "CASE STUDY" : "SYSTEM ARCHITECTURE"} / 0{activeIndex + 1}</span>
+            <span>{demoOpen ? "REAL PROJECT EVIDENCE · STEP-BY-STEP" : "SELECT A MODULE TO INSPECT"}</span>
           </div>
 
           {demoOpen ? (
-            <section className={`project-demo-board ${demoPlaying ? "is-playing" : "is-paused"}`} aria-label={`${activeProject.title} project demo`}>
+            <section
+              ref={caseStudyBoardRef}
+              id="project-case-study"
+              className={`project-demo-board ${demoPlaying ? "is-playing" : "is-paused"}`}
+              aria-label={`${activeProject.title} case study`}
+              tabIndex={-1}
+            >
               <header className="project-demo-toolbar">
                 <div>
-                  <span>PLAYBACK / {String(demoFrameIndex + 1).padStart(2, "0")} OF {String(demoFrames.length).padStart(2, "0")}</span>
+                  <span>CASE STUDY / {String(demoFrameIndex).padStart(2, "0")} OF {String(demoFrames.length - 1).padStart(2, "0")}</span>
                   <strong>{activeProject.title}</strong>
                 </div>
                 <div className="project-demo-toolbar-actions">
@@ -594,14 +612,45 @@ export default function ProjectUniverse() {
                     {demoPlaying ? <PauseIcon size={14} weight="fill" aria-hidden="true" /> : <PlayIcon size={14} weight="fill" aria-hidden="true" />}
                     {demoPlaying ? "PAUSE" : demoFrameIndex === demoFrames.length - 1 ? "REPLAY" : "PLAY"}
                   </button>
-                  <button type="button" onClick={() => { setDemoOpen(false); setDemoPlaying(false); }}>
+                  <button type="button" onClick={() => closeCaseStudy()}>
                     CLOSE ×
                   </button>
                 </div>
               </header>
 
-              <div className="project-demo-media" key={`${activeProject.slug}-${demoFrameIndex}`}>
-                {demoFrame.code ? (
+              <div className={`project-demo-media ${demoFrame.brief ? "is-brief" : ""}`} key={`${activeProject.slug}-${demoFrameIndex}`}>
+                {demoFrame.brief ? (
+                  <div className="project-demo-brief">
+                    <div className="project-demo-brief-lead">
+                      <span>00 / PROJECT BRIEF</span>
+                      <h3>{activeProject.title}</h3>
+                      <p>{activeProject.summary}</p>
+                    </div>
+                    <div className="project-demo-brief-grid">
+                      <article>
+                        <span>PROBLEM</span>
+                        <p>{demoFrame.brief.problem}</p>
+                      </article>
+                      <article>
+                        <span>MY ROLE</span>
+                        <p>{demoFrame.brief.role}</p>
+                      </article>
+                      <article className="project-demo-brief-stack">
+                        <span>CORE STACK</span>
+                        <ul>{demoFrame.brief.stack.map((item) => <li key={item}>{item}</li>)}</ul>
+                      </article>
+                      <article className="project-demo-brief-route">
+                        <span>IMPLEMENTATION ROUTE</span>
+                        <ol>{demoFrame.brief.route.map((item, index) => <li key={item}><b>0{index + 1}</b>{item}</li>)}</ol>
+                      </article>
+                      <article className="project-demo-brief-outcome">
+                        <span>OUTCOME / PROOF</span>
+                        <p>{demoFrame.brief.outcome}</p>
+                        <small>{demoFrame.brief.evidence}</small>
+                      </article>
+                    </div>
+                  </div>
+                ) : demoFrame.code ? (
                   <div className="project-demo-code" aria-label={`${demoFrame.code.filename} source excerpt`}>
                     <header>
                       <span>{demoFrame.code.filename}</span>
@@ -623,16 +672,18 @@ export default function ProjectUniverse() {
                 <span className="project-demo-source">{demoFrame.source}</span>
               </div>
 
-              <div className="project-demo-story" key={`${activeProject.slug}-${demoFrameIndex}-story`}>
-                <div>
-                  <span>{demoFrame.eyebrow}</span>
-                  <h3>{demoFrame.title}</h3>
+              {!demoFrame.brief ? (
+                <div className="project-demo-story" key={`${activeProject.slug}-${demoFrameIndex}-story`}>
+                  <div>
+                    <span>{demoFrame.eyebrow}</span>
+                    <h3>{demoFrame.title}</h3>
+                  </div>
+                  <div className="project-demo-explanation">
+                    <p>{demoFrame.description}</p>
+                    <small><b>PROOF</b>{demoFrame.proof}</small>
+                  </div>
                 </div>
-                <div className="project-demo-explanation">
-                  <p>{demoFrame.description}</p>
-                  <small><b>PROOF</b>{demoFrame.proof}</small>
-                </div>
-              </div>
+              ) : null}
 
               <footer className="project-demo-controls">
                 <button type="button" onClick={() => moveDemo(-1)} disabled={demoFrameIndex === 0} aria-label="Previous demo frame">
@@ -648,7 +699,7 @@ export default function ProjectUniverse() {
                       aria-label={`Show ${frame.eyebrow}`}
                       aria-current={index === demoFrameIndex ? "step" : undefined}
                     >
-                      <span>0{index + 1}</span>
+                      <span>{String(index).padStart(2, "0")}</span>
                       <i aria-hidden="true" />
                     </button>
                   ))}
@@ -749,7 +800,7 @@ export default function ProjectUniverse() {
                   </header>
                   <div className="architecture-detail-grid">
                     <div>
-                      <span><StudentIcon size={22} weight="light" aria-hidden="true" />ROLE</span>
+                      <span><StudentIcon size={22} weight="light" aria-hidden="true" />MODULE ROLE</span>
                       <p>{selectedNode.role}</p>
                     </div>
                     <div>
