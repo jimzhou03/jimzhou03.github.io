@@ -266,6 +266,13 @@
   transform: translateX(-50%);
 }
 
+@media (min-width: 821px) {
+  .life-atlas-map-canvas.is-china {
+    top: 47.5%;
+    height: 94%;
+  }
+}
+
 .life-atlas-map-image,
 .life-atlas-route,
 .life-atlas-map-nodes {

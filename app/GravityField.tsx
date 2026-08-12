@@ -70,7 +70,10 @@ export default function GravityField() {
       height * (0.11 + (lane / Math.max(1, lanes - 1)) * 0.78);
 
     const resetParticle = (particle: Particle, firstPass = false) => {
-      particle.x = firstPass ? Math.random() * width * 0.86 : -16 - Math.random() * width * 0.22;
+      const incomingEdge = Math.max(width * 0.28, blackHole.x - blackHole.radius * 1.5);
+      particle.x = firstPass
+        ? Math.random() * incomingEdge
+        : -16 - Math.random() * width * 0.22;
       particle.lane = Math.floor(Math.random() * 11);
       particle.y = streamY(particle.lane, 11) + (Math.random() - 0.5) * height * 0.07;
       const scaleRoll = Math.random();
@@ -197,15 +200,19 @@ export default function GravityField() {
         const dy = blackHole.y - particle.y;
         const distance = Math.max(8, Math.hypot(dx, dy));
         const field = distance < blackHole.influence ? 1 - distance / blackHole.influence : 0;
-        const gravity = field * field * 0.052;
-        const swirl = field * field * 0.016;
+        const normalizedDistance = Math.max(0.1, distance / blackHole.influence);
+        const gravity = field > 0
+          ? Math.min(0.24, (0.0018 / (normalizedDistance * normalizedDistance)) * field)
+          : 0;
+        const swirl = gravity * 0.2;
         const laneWave = Math.sin(frame * 0.008 + particle.lane * 0.84 + index * 0.05);
 
-        particle.vx += (particle.baseSpeed - particle.vx) * 0.018;
+        const streamRecovery = Math.pow(1 - field, 2);
+        particle.vx += (particle.baseSpeed - particle.vx) * 0.018 * streamRecovery;
         particle.vy += laneWave * 0.0008;
         particle.vx += (dx / distance) * gravity + (-dy / distance) * swirl;
         particle.vy += (dy / distance) * gravity + (dx / distance) * swirl;
-        applyPointerRepulsion(particle);
+        if (distance > blackHole.radius * 1.7) applyPointerRepulsion(particle);
         particle.vx *= 0.993;
         particle.vy *= 0.991;
 
@@ -221,7 +228,7 @@ export default function GravityField() {
 
         const nextDistance = Math.hypot(blackHole.x - particle.x, blackHole.y - particle.y);
         if (
-          nextDistance < blackHole.radius * 0.82 ||
+          nextDistance < blackHole.radius * 1.02 ||
           particle.x > width + 38 ||
           particle.y < -36 ||
           particle.y > height + 36
@@ -235,8 +242,8 @@ export default function GravityField() {
         const trailLength = Math.min(46, 9 + particleSpeed * 7.5);
         const particleColor = nearHorizon ? "242,239,231" : "10,10,9";
         const fade =
-          nextDistance < blackHole.radius * 1.08
-            ? Math.max(0, (nextDistance - blackHole.radius * 0.82) / (blackHole.radius * 0.26))
+          nextDistance < blackHole.radius * 1.18
+            ? Math.max(0, (nextDistance - blackHole.radius * 1.02) / (blackHole.radius * 0.16))
             : 1;
 
         context.strokeStyle = `rgba(${particleColor},${particle.alpha * 0.18 * fade})`;
@@ -431,9 +438,6 @@ export default function GravityField() {
         <span ref={eventHorizonRef} className="gravity-event-horizon" />
       </div>
       <canvas ref={canvasRef} className="gravity-canvas" />
-      <span className="gravity-interaction-hint">
-        LEFT → RIGHT · MOVE CURSOR TO SCATTER THE STREAM
-      </span>
     </div>
   );
 }

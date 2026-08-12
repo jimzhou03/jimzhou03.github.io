@@ -4144,17 +4144,6 @@ body {
   content: "";
 }
 
-.gravity-interaction-hint {
-  position: absolute;
-  z-index: 3;
-  right: 16px;
-  bottom: 14px;
-  color: rgba(10,10,9,.46);
-  font: 9px var(--font-mono);
-  letter-spacing: .11em;
-  pointer-events: none;
-}
-
 .gravity-projects { border-bottom: 1px solid var(--hairline); }
 
 .gravity-project-row {
@@ -4534,7 +4523,9 @@ body {
   .gravity-black-hole {
     width: min(58%, 460px);
   }
+}
 
+@media (min-width: 821px) and (min-height: 761px) {
   .architecture-canvas {
     padding-top: 22px;
     padding-bottom: 68px;
@@ -4816,12 +4807,6 @@ body {
     width: min(72%, 310px);
   }
 
-  .gravity-interaction-hint {
-    right: 10px;
-    bottom: 10px;
-    font-size: 7px;
-  }
-
   .gravity-project-row { grid-template-columns: 34px 1fr; }
   .gravity-project-number { padding-top: 6px; }
 
@@ -4958,10 +4943,6 @@ body {
   .gravity-pull::after,
   .gravity-pull-inline::after {
     animation: none;
-  }
-
-  .gravity-interaction-hint {
-    display: none;
   }
 
   .life-frame img {
