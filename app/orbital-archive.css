@@ -3785,7 +3785,7 @@ body {
 
 .gravity-home {
   position: relative;
-  min-height: 510px;
+  min-height: max(510px, calc(100svh - 242px));
   display: grid;
   grid-template-columns: minmax(500px, .48fr) minmax(0, .52fr);
   border-bottom: 1px solid var(--hairline);
@@ -4527,6 +4527,30 @@ body {
   .gravity-tech-orbit {
     grid-column: 2 / 4;
     margin: -8px 0 24px;
+  }
+}
+
+@media (min-width: 821px) and (min-height: 900px) {
+  .gravity-black-hole {
+    width: min(58%, 460px);
+  }
+
+  .architecture-canvas {
+    padding-top: 22px;
+    padding-bottom: 68px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .architecture-module { min-height: 112px; }
+  .architecture-ai-loop .architecture-module { min-height: 100px; }
+  .architecture-foundation .architecture-module { min-height: 56px; }
+  .architecture-ccl-inference .architecture-module { min-height: 142px; }
+  .architecture-ccl-training .architecture-module { min-height: 128px; }
+
+  .architecture-board:has(.architecture-detail.open) .architecture-canvas {
+    padding-bottom: 188px;
   }
 }
 

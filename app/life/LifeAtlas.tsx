@@ -15,6 +15,7 @@ import {
   type LifeRoute,
   type TransitMode,
 } from "../../content/life-locations";
+import type { LifeEntry } from "../../content/life";
 
 type LifeView = "china" | "chinaToGermany" | "germany";
 type GermanyStage = "overview" | "frankfurtToHeidelberg";
@@ -55,6 +56,48 @@ function VehicleIcon({ mode }: { mode: TransitMode }) {
         aria-hidden="true"
       />
     </>
+  );
+}
+
+function DeferredLifeImage({ photo, eager }: { photo: LifeEntry; eager: boolean }) {
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(eager);
+
+  useEffect(() => {
+    if (shouldLoad) return;
+
+    const image = imageRef.current;
+    if (!image || !("IntersectionObserver" in window)) {
+      setShouldLoad(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        setShouldLoad(true);
+        observer.disconnect();
+      },
+      { rootMargin: "120px 0px" },
+    );
+
+    observer.observe(image);
+    return () => observer.disconnect();
+  }, [shouldLoad]);
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      ref={imageRef}
+      className={shouldLoad ? "is-loaded" : "is-deferred"}
+      src={shouldLoad ? photo.image : undefined}
+      alt={photo.alt}
+      width={photo.width}
+      height={photo.height}
+      loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : "low"}
+      decoding="async"
+    />
   );
 }
 
@@ -399,6 +442,8 @@ export default function LifeAtlas() {
               src={isChina ? "/life/china.svg" : "/life/germany.svg"}
               alt=""
               aria-hidden="true"
+              fetchPriority="high"
+              decoding="async"
             />
 
             <svg
@@ -638,15 +683,7 @@ function ChinaArchive({ activeCity }: { activeCity: CityId }) {
               key={photo.id}
             >
               <div>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={photo.image}
-                  alt={photo.alt}
-                  width={photo.width}
-                  height={photo.height}
-                  loading={index < 3 ? "eager" : "lazy"}
-                  decoding="async"
-                />
+                <DeferredLifeImage photo={photo} eager={index === 0} />
               </div>
               <figcaption>
                 <span>{photo.id} / {photo.category}</span>
