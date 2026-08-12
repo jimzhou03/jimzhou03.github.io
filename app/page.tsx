@@ -27,11 +27,11 @@ export default function Home() {
                   <time dateTime="2024">2024</time>
                 </li>
                 <li>
-                  <span>Second-Class Scholarship</span>
+                  <span>CCL25-Eval Task 10 · 4th Place · Third Prize</span>
                   <time dateTime="2025">2025</time>
                 </li>
                 <li>
-                  <span>CCL25-Eval Task 10 · 4th Place · Third Prize</span>
+                  <span>Second-Class Scholarship</span>
                   <time dateTime="2025">2025</time>
                 </li>
                 <li>
