@@ -1088,3 +1088,24 @@
     transition: none;
   }
 }
+
+/* Keep the atlas proportional to the shared desktop viewport system. */
+@media (min-width: 821px) {
+  .life-atlas {
+    min-height: calc(100svh - 82px);
+  }
+
+  .life-atlas-map-panel {
+    top: 82px;
+    height: calc(100svh - 82px);
+  }
+
+  .life-atlas-map-image {
+    opacity: .46;
+    filter: grayscale(1) contrast(1.04);
+  }
+
+  .life-atlas-map-canvas.is-germany .life-atlas-map-image {
+    opacity: .4;
+  }
+}

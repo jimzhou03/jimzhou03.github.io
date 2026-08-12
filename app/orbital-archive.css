@@ -5915,3 +5915,86 @@ html[data-ascii-transition="active"] {
   .case-study-contribution { gap: 58px; }
   .case-study-ledger { padding: 26px 22px; }
 }
+
+/* Desktop viewport system — fluid until 1760px, then centered on wide displays. */
+@media (min-width: 821px) {
+  .site-frame:has(.gravity-home) .page-shell,
+  .site-frame:has(.project-universe) .page-shell,
+  .site-frame:has(.life-atlas) .page-shell {
+    width: min(1760px, calc(100% - clamp(54px, 4vw, 96px)));
+  }
+
+  .gravity-copy {
+    padding-right: clamp(34px, 3vw, 58px);
+  }
+
+  .gravity-education {
+    font-size: clamp(13px, .84vw, 16px);
+  }
+
+  .gravity-degree-honors {
+    width: min(calc(100% - 2ch), 540px);
+  }
+
+  .gravity-black-hole {
+    width: clamp(380px, min(28vw, 45svh), 500px);
+  }
+
+  .project-universe-layout {
+    width: min(1760px, calc(100% - clamp(54px, 4vw, 96px)));
+    grid-template-columns: minmax(clamp(360px, 29vw, 500px), .32fr) minmax(0, .68fr);
+  }
+
+  .project-universe-meta {
+    right: max(27px, calc((100vw - 1760px) / 2));
+    left: max(27px, calc((100vw - 1760px) / 2));
+  }
+
+  .project-universe-index {
+    padding-right: clamp(22px, 2vw, 38px);
+  }
+
+  .project-universe-list h2 {
+    max-width: 520px;
+    font-size: clamp(34px, 2.5vw, 48px);
+  }
+
+  .architecture-stage {
+    padding-left: clamp(24px, 2.1vw, 40px);
+  }
+}
+
+@media (min-width: 821px) and (min-height: 761px) {
+  .architecture-canvas {
+    padding-top: clamp(22px, 2.3vh, 32px);
+    padding-bottom: clamp(68px, 7vh, 88px);
+  }
+
+  .architecture-module {
+    min-height: clamp(112px, 11.5vh, 136px);
+  }
+
+  .architecture-ai-loop .architecture-module {
+    min-height: clamp(100px, 10.5vh, 126px);
+  }
+
+  .architecture-foundation .architecture-module {
+    min-height: clamp(56px, 6vh, 72px);
+  }
+
+  .architecture-ccl-inference .architecture-module {
+    min-height: clamp(142px, 15vh, 176px);
+  }
+
+  .architecture-ccl-training .architecture-module {
+    min-height: clamp(128px, 13vh, 156px);
+  }
+
+  .architecture-detail.open {
+    max-height: clamp(176px, 19vh, 220px);
+  }
+
+  .architecture-board:has(.architecture-detail.open) .architecture-canvas {
+    padding-bottom: clamp(188px, 20vh, 232px);
+  }
+}
