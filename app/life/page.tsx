@@ -4,8 +4,12 @@ import "./life-atlas.css";
 
 export default function LifePage() {
   return (
-    <SiteFrame active="life">
-      <LifeAtlas />
-    </SiteFrame>
+    <>
+      <link rel="preload" as="image" href="/life/china.svg" type="image/svg+xml" />
+      <link rel="preload" as="image" href="/life/world-map.png" type="image/png" />
+      <SiteFrame active="life">
+        <LifeAtlas />
+      </SiteFrame>
+    </>
   );
 }

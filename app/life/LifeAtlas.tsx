@@ -60,42 +60,16 @@ function VehicleIcon({ mode }: { mode: TransitMode }) {
 }
 
 function DeferredLifeImage({ photo, eager }: { photo: LifeEntry; eager: boolean }) {
-  const imageRef = useRef<HTMLImageElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(eager);
-
-  useEffect(() => {
-    if (shouldLoad) return;
-
-    const image = imageRef.current;
-    if (!image || !("IntersectionObserver" in window)) {
-      setShouldLoad(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        setShouldLoad(true);
-        observer.disconnect();
-      },
-      { rootMargin: "120px 0px" },
-    );
-
-    observer.observe(image);
-    return () => observer.disconnect();
-  }, [shouldLoad]);
-
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      ref={imageRef}
-      className={shouldLoad ? "is-loaded" : "is-deferred"}
-      src={shouldLoad ? photo.image : undefined}
+      className="is-loaded"
+      src={photo.image}
       alt={photo.alt}
       width={photo.width}
       height={photo.height}
       loading={eager ? "eager" : "lazy"}
-      fetchPriority={eager ? "high" : "low"}
+      fetchPriority={eager ? "high" : "auto"}
       decoding="async"
     />
   );
@@ -683,7 +657,7 @@ function ChinaArchive({ activeCity }: { activeCity: CityId }) {
               key={photo.id}
             >
               <div>
-                <DeferredLifeImage photo={photo} eager={index === 0} />
+                <DeferredLifeImage photo={photo} eager={index < 3} />
               </div>
               <figcaption>
                 <span>{photo.id} / {photo.category}</span>

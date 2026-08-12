@@ -12,6 +12,7 @@ type Particle = {
   lane: number;
   baseSpeed: number;
   stretch: number;
+  visibilitySeed: number;
 };
 
 type GravityToken = {
@@ -70,10 +71,10 @@ export default function GravityField() {
       height * (0.11 + (lane / Math.max(1, lanes - 1)) * 0.78);
 
     const resetParticle = (particle: Particle, firstPass = false) => {
-      const incomingEdge = Math.max(width * 0.28, blackHole.x - blackHole.radius * 1.5);
+      const incomingEdge = Math.max(width * 0.55, blackHole.x - blackHole.radius * 1.35);
       particle.x = firstPass
-        ? Math.random() * incomingEdge
-        : -16 - Math.random() * width * 0.22;
+        ? Math.pow(Math.random(), 0.52) * incomingEdge
+        : -12 - Math.random() * width * 0.08;
       particle.lane = Math.floor(Math.random() * 11);
       particle.y = streamY(particle.lane, 11) + (Math.random() - 0.5) * height * 0.07;
       const scaleRoll = Math.random();
@@ -90,13 +91,16 @@ export default function GravityField() {
       particle.vx = particle.baseSpeed;
       particle.vy = (Math.random() - 0.5) * 0.055;
       particle.alpha = 0.18 + Math.random() * 0.66;
+      particle.visibilitySeed = Math.random();
     };
 
     const resetToken = (token: GravityToken, firstPass = false) => {
       token.lane = token.index % 5;
+      const labelStart = Math.max(width * 0.5, blackHole.x - blackHole.influence * 0.86);
+      const labelEnd = Math.max(labelStart + 1, blackHole.x - blackHole.radius * 1.7);
       token.x = firstPass
-        ? width * (0.08 + ((token.index * 0.137) % 0.52))
-        : -70 - Math.random() * width * 0.75;
+        ? labelStart + ((token.index * 0.137) % 1) * (labelEnd - labelStart)
+        : labelStart - 90 - Math.random() * width * 0.12;
       token.baseY = streamY(token.lane, 5) + (token.index % 2 ? 13 : -10);
       token.y = token.baseY;
       token.baseSpeed = (0.18 + (token.index % 3) * 0.035) * STREAM_SPEED;
@@ -245,8 +249,17 @@ export default function GravityField() {
           nextDistance < blackHole.radius * 1.18
             ? Math.max(0, (nextDistance - blackHole.radius * 1.02) / (blackHole.radius * 0.16))
             : 1;
+        const densityEnd = Math.max(1, blackHole.x - blackHole.radius * 2.15);
+        const densityProgress = Math.max(0, Math.min(1, particle.x / densityEnd));
+        const availableDensity = 0.18 + Math.pow(densityProgress, 0.88) * 0.82;
+        const densityFade = Math.max(
+          0,
+          Math.min(1, (availableDensity - particle.visibilitySeed) * 7),
+        );
 
-        context.strokeStyle = `rgba(${particleColor},${particle.alpha * 0.18 * fade})`;
+        if (densityFade <= 0) return;
+
+        context.strokeStyle = `rgba(${particleColor},${particle.alpha * 0.18 * fade * densityFade})`;
         context.lineWidth = nearHorizon ? 0.85 : 0.5;
         context.beginPath();
         context.moveTo(
@@ -256,7 +269,7 @@ export default function GravityField() {
         context.lineTo(particle.x, particle.y);
         context.stroke();
 
-        context.fillStyle = `rgba(${particleColor},${particle.alpha * fade})`;
+        context.fillStyle = `rgba(${particleColor},${particle.alpha * fade * densityFade})`;
         context.save();
         context.translate(particle.x, particle.y);
         context.rotate(Math.atan2(particle.vy, particle.vx));
@@ -272,7 +285,7 @@ export default function GravityField() {
         );
         context.fill();
         if (particle.size > 3.4) {
-          context.strokeStyle = `rgba(${particleColor},${particle.alpha * 0.28 * fade})`;
+          context.strokeStyle = `rgba(${particleColor},${particle.alpha * 0.28 * fade * densityFade})`;
           context.lineWidth = 0.65;
           context.beginPath();
           context.arc(
