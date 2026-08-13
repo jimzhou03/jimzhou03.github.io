@@ -196,7 +196,7 @@ export class EditorialGravityScene {
       clamp(centerX / bounds.width, 0, 1),
       clamp(1 - centerY / bounds.height, 0, 1),
     );
-    const horizonRadiusPixels = anchorBounds.width * 0.215;
+    const horizonRadiusPixels = anchorBounds.width * 0.25;
     const normalizedRadius = horizonRadiusPixels / bounds.height;
 
     this.holePosition.set(
@@ -206,7 +206,7 @@ export class EditorialGravityScene {
     );
     this.holeRadius = normalizedRadius * this.worldHeight;
     this.influenceRadius = Math.max(this.holeRadius * 6.2, this.worldHeight * 0.46);
-    const interactionRadiusPixels = nextTier === "mobile" ? 125 : nextTier === "tablet" ? 145 : 160;
+    const interactionRadiusPixels = nextTier === "mobile" ? 130 : nextTier === "tablet" ? 150 : 170;
     this.pointerRadius = (interactionRadiusPixels / bounds.height) * this.worldHeight;
     this.canvas.dataset.pointerRadius = String(interactionRadiusPixels);
 
@@ -226,7 +226,7 @@ export class EditorialGravityScene {
   private populationForTier() {
     if (this.tier === "mobile") return { asteroids: 10, micro: 26, foreground: 0, dust: 24, words: 4 };
     if (this.tier === "tablet") return { asteroids: 20, micro: 52, foreground: 1, dust: 34, words: 6 };
-    return { asteroids: 32, micro: 90, foreground: 1, dust: 42, words: 8 };
+    return { asteroids: 30, micro: 88, foreground: 1, dust: 38, words: 8 };
   }
 
   private clearPopulation() {
@@ -325,8 +325,8 @@ export class EditorialGravityScene {
     body.streamY = body.position.y;
     body.position.z = foreground ? 1.65 + this.random() * 0.45 : -1.25 + this.random() * 2.35;
     body.depth = body.position.z;
-    body.baseSpeed = (foreground ? 0.82 : micro ? 0.72 : 0.46)
-      + this.random() * (foreground ? 0.2 : micro ? 0.58 : 0.38);
+    body.baseSpeed = (foreground ? 0.9 : micro ? 0.82 : 0.54)
+      + this.random() * (foreground ? 0.22 : micro ? 0.64 : 0.42);
     body.velocity.set(body.baseSpeed, (this.random() - 0.5) * 0.025, 0);
 
     const sizeRoll = this.random();
@@ -354,7 +354,7 @@ export class EditorialGravityScene {
         position: new THREE.Vector3(),
         velocity: new THREE.Vector3(),
         streamY: 0,
-        baseSpeed: 0.72 + this.random() * 0.72,
+        baseSpeed: 0.86 + this.random() * 0.78,
         seed: this.random() * Math.PI * 2,
       };
       this.resetDust(body, true);
@@ -478,13 +478,13 @@ export class EditorialGravityScene {
     const distance = Math.max(this.holeRadius * 0.72, this.toHole.length());
     const field = 1 - smoothstep(this.holeRadius * 1.2, this.influenceRadius, distance);
     const softenedDistance = distance * distance + this.holeRadius * this.holeRadius * 0.38;
-    const gravity = (this.holeRadius * this.holeRadius * 4.15 * field * field) / softenedDistance;
+    const gravity = (this.holeRadius * this.holeRadius * 4.8 * field * field) / softenedDistance;
     this.toHole.multiplyScalar(1 / distance);
     body.velocity.x += this.toHole.x * gravity * delta;
     body.velocity.y += this.toHole.y * gravity * delta;
 
     const orbitDirection = body.position.y >= this.holePosition.y ? -1 : 1;
-    const tangential = gravity * field * 0.84 * swirlMultiplier;
+    const tangential = gravity * field * 0.92 * swirlMultiplier;
     body.velocity.x += -this.toHole.y * tangential * orbitDirection * delta;
     body.velocity.y += this.toHole.x * tangential * orbitDirection * delta;
 
@@ -494,7 +494,7 @@ export class EditorialGravityScene {
     body.velocity.x += (body.baseSpeed - body.velocity.x) * recovery * delta;
     body.velocity.y += Math.sin(this.elapsed * 0.16 + body.seed) * 0.004 * (1 - field) * delta;
 
-    const maximumSpeed = 2.6 + field * 3.1;
+    const maximumSpeed = 3.0 + field * 3.7;
     const speed = body.velocity.length();
     if (speed > maximumSpeed) body.velocity.multiplyScalar(maximumSpeed / speed);
     return { distance, field };
@@ -510,7 +510,7 @@ export class EditorialGravityScene {
     const falloff = 1 - smoothstep(0, this.pointerRadius, distance);
     const directionScale = 1 / Math.max(distance, this.pointerRadius * 0.08);
     this.fromPointer.multiplyScalar(directionScale);
-    body.velocity.addScaledVector(this.fromPointer, 1.28 * response * falloff * falloff * delta);
+    body.velocity.addScaledVector(this.fromPointer, 1.48 * response * falloff * falloff * delta);
     this.disturbedBodies += 1;
     return true;
   }
@@ -521,7 +521,7 @@ export class EditorialGravityScene {
         const foreground = body.kind === "foreground";
         const micro = body.kind === "micro";
         const gravityState = this.applyGravity(body, delta, foreground ? 0.34 : micro ? 0.82 : 1);
-        this.applyPointerDisturbance(body, delta, foreground ? 0.2 : micro ? 1.08 : 0.58);
+        this.applyPointerDisturbance(body, delta, foreground ? 0.18 : micro ? 1.18 : 0.64);
         body.position.addScaledVector(body.velocity, delta);
         this.quaternionStep.setFromAxisAngle(body.angularAxis, body.angularSpeed * delta);
         body.rotation.multiply(this.quaternionStep).normalize();
@@ -554,12 +554,12 @@ export class EditorialGravityScene {
           ? -this.worldWidth * 0.05
           : visualOnlyLayout
             ? -this.worldWidth * 0.16
-            : -this.worldWidth * 0.18;
+            : -this.worldWidth * 0.27;
         const visibilityEnd = foreground
           ? this.worldWidth * 0.18
           : visualOnlyLayout
             ? this.worldWidth * 0.04
-            : this.worldWidth * 0.03;
+            : -this.worldWidth * 0.08;
         const entryScale = foreground
           ? 0.015 + smoothstep(visibilityStart, visibilityEnd, body.position.x) * 0.985
           : 0.055 + smoothstep(visibilityStart, visibilityEnd, body.position.x) * 0.945;

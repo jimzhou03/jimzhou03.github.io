@@ -180,6 +180,10 @@ export const blackHoleFragmentShader = /* glsl */ `
       * (1.0 - smoothstep(outerRadius - softness, outerRadius + softness, radius));
   }
 
+  float band(float value, float halfWidth, float feather) {
+    return 1.0 - smoothstep(halfWidth, halfWidth + feather, abs(value));
+  }
+
   void main() {
     vec2 p = (vUv - uHoleCenter) * vec2(uAspect, 1.0);
     float radius = length(p);
@@ -191,64 +195,78 @@ export const blackHoleFragmentShader = /* glsl */ `
       + sin(angle * 7.0 + slowTime * 0.075) * uHoleRadius * 0.0025;
     float horizonRadius = uHoleRadius * breathing + edgeNoise;
 
-    float diskTilt = -0.072;
+    float diskTilt = -0.055;
     mat2 diskRotation = mat2(cos(diskTilt), -sin(diskTilt), sin(diskTilt), cos(diskTilt));
-    vec2 diskPoint = diskRotation * p;
-    vec2 ellipsePoint = vec2(diskPoint.x, diskPoint.y / 0.15);
-    float diskRadius = length(ellipsePoint);
-    float diskAngle = atan(ellipsePoint.y, ellipsePoint.x);
-    float radialBand = annulus(
-      diskRadius,
-      uHoleRadius * 1.01,
-      uHoleRadius * 2.9,
-      uHoleRadius * 0.11
-    );
+    vec2 diskPoint = diskRotation * p / max(uHoleRadius, 0.0001);
+    float broadWarp = (fbm(vec2(diskPoint.x * 0.29 - slowTime * 0.009, 3.7)) - 0.5) * 0.17;
+    float localWarp = (fbm(vec2(diskPoint.x * 0.78 - slowTime * 0.018, 8.2)) - 0.5) * 0.075;
+    float centerLine = broadWarp + localWarp + sin(diskPoint.x * 1.12 + slowTime * 0.014) * 0.025;
+    float crossSection = diskPoint.y - centerLine;
 
-    float normalizedDiskRadius = diskRadius / max(uHoleRadius, 0.0001);
+    float widthNoise = fbm(vec2(diskPoint.x * 0.42 + 11.2, slowTime * 0.006 + 2.4));
+    float matterWidth = mix(0.22, 0.31, widthNoise);
+    float broadBand = band(crossSection, matterWidth, 0.2);
+    float innerBand = band(crossSection, matterWidth * 0.43, 0.12);
+
     vec2 flowCoordinates = vec2(
-      diskAngle * 1.18 - slowTime * 0.026,
-      normalizedDiskRadius * 1.42 + slowTime * 0.014
+      diskPoint.x * 0.68 - slowTime * 0.022,
+      crossSection * 6.4 + slowTime * 0.008
     );
-    float flow = fbm(flowCoordinates);
-    float broadFlow = fbm(flowCoordinates * vec2(0.53, 0.68) + vec2(5.4, 1.7));
-    float density = clamp(0.34 + broadFlow * 0.48 + flow * 0.22, 0.28, 0.94);
-    float sideBias = mix(0.72, 1.08, smoothstep(-uHoleRadius * 2.45, uHoleRadius * 2.45, diskPoint.x));
-    float outerTaper = 1.0 - smoothstep(2.35, 2.95, normalizedDiskRadius);
-    float matterDensity = radialBand * density * sideBias * mix(0.72, 1.0, outerTaper);
-    float rearGate = smoothstep(-uHoleRadius * 0.03, uHoleRadius * 0.11, diskPoint.y);
-    float frontGate = 1.0 - smoothstep(-uHoleRadius * 0.11, uHoleRadius * 0.03, diskPoint.y);
+    float broadFlow = fbm(flowCoordinates * vec2(0.52, 0.72) + vec2(4.8, 1.3));
+    float filamentFlow = fbm(flowCoordinates + vec2(12.7, 6.4));
+    float fineFlow = fbm(flowCoordinates * vec2(1.68, 1.34) + vec2(1.9, 14.2));
+    float density = clamp(0.19 + broadFlow * 0.42 + filamentFlow * 0.28 + fineFlow * 0.12, 0.0, 1.0);
+    float filament = smoothstep(0.47, 0.82, filamentFlow) * broadBand;
 
-    float rearMatter = matterDensity * rearGate;
-    float frontMatter = matterDensity * frontGate;
+    float leftExtent = 1.0 - smoothstep(3.55, 4.65, -diskPoint.x);
+    float rightExtent = 1.0 - smoothstep(2.7, 3.75, diskPoint.x);
+    float streamExtent = leftExtent * rightExtent;
+    float centralWeight = 1.0 - smoothstep(1.1, 4.15, abs(diskPoint.x));
+    float densityField = broadBand * streamExtent * density;
+    densityField *= mix(0.68, 1.0, centralWeight);
+    densityField += innerBand * streamExtent * (0.13 + filament * 0.24);
 
-    float normalizedArcX = p.x / max(uHoleRadius * 1.52, 0.0001);
+    float rearGate = smoothstep(-0.17, 0.17, crossSection);
+    float frontGate = 1.0 - smoothstep(-0.16, 0.2, crossSection);
+    float rearMatter = densityField * rearGate;
+    float frontMatter = densityField * frontGate;
+
+    float normalizedArcX = p.x / max(uHoleRadius * 1.58, 0.0001);
     float arcSpan = 1.0 - smoothstep(0.86, 1.0, abs(normalizedArcX));
-    float arcHeight = uHoleRadius * (0.28 + 0.9 * sqrt(max(0.0, 1.0 - normalizedArcX * normalizedArcX)));
+    float arcHeight = uHoleRadius * (0.2 + 0.92 * sqrt(max(0.0, 1.0 - normalizedArcX * normalizedArcX)));
+    float arcWarp = (fbm(vec2(normalizedArcX * 1.7 - slowTime * 0.011, 9.4)) - 0.5)
+      * uHoleRadius * 0.12;
     float lensedArc = 1.0 - smoothstep(
-      uHoleRadius * 0.035,
-      uHoleRadius * 0.105,
-      abs(p.y - arcHeight)
+      uHoleRadius * 0.045,
+      uHoleRadius * 0.14,
+      abs(p.y - arcHeight - arcWarp)
     );
-    float arcTexture = 0.48 + fbm(vec2(normalizedArcX * 1.7 - slowTime * 0.014, 8.7)) * 0.42;
+    float arcTexture = 0.34 + fbm(vec2(normalizedArcX * 1.45 - slowTime * 0.012, 8.7)) * 0.5;
     lensedArc *= arcSpan * arcTexture;
 
-    float photonRing = ring(radius, uHoleRadius * 1.035, uHoleRadius * 0.0045);
-    float outerCircle = ring(radius, uHoleRadius * 2.15, uHoleRadius * 0.0025);
+    float photonRing = ring(radius, uHoleRadius * 1.025, uHoleRadius * 0.006);
+    float outerCircle = ring(radius, uHoleRadius * 2.2, uHoleRadius * 0.002);
     outerCircle *= 0.42 + 0.58 * smoothstep(0.28, 0.72, noise(vec2(angle * 1.8, 4.2)));
     float massShell = annulus(
       radius,
-      horizonRadius * 0.995,
-      horizonRadius * 1.14,
-      uHoleRadius * 0.018
+      horizonRadius * 0.985,
+      horizonRadius * 1.16,
+      uHoleRadius * 0.024
     );
     float lensingShade = annulus(
       radius,
-      horizonRadius * 1.08,
-      horizonRadius * 1.32,
-      uHoleRadius * 0.04
+      horizonRadius * 1.09,
+      horizonRadius * 1.38,
+      uHoleRadius * 0.055
     );
-    float horizon = 1.0 - smoothstep(horizonRadius, horizonRadius + uHoleRadius * 0.018, radius);
-    float rim = ring(radius, horizonRadius * 1.014, uHoleRadius * 0.0055);
+    float horizon = 1.0 - smoothstep(horizonRadius, horizonRadius + uHoleRadius * 0.025, radius);
+    float softRim = annulus(
+      radius,
+      horizonRadius * 0.995,
+      horizonRadius * 1.085,
+      uHoleRadius * 0.035
+    );
+    float rim = ring(radius, horizonRadius * 1.018, uHoleRadius * 0.0065);
     float innerRim = ring(radius, horizonRadius * 0.925, uHoleRadius * 0.005) * 0.08;
 
     vec3 paper = vec3(0.949, 0.937, 0.906);
@@ -256,27 +274,27 @@ export const blackHoleFragmentShader = /* glsl */ `
     vec3 color = paper;
     float alpha = 0.0;
 
-    float rearAlpha = rearMatter * 0.58;
-    vec3 rearColor = mix(vec3(0.24), vec3(0.58), broadFlow);
+    float rearAlpha = rearMatter * mix(0.5, 0.68, broadFlow);
+    vec3 rearColor = mix(vec3(0.18), vec3(0.58), broadFlow);
     color = mix(color, rearColor, rearAlpha);
     alpha = max(alpha, rearAlpha);
 
-    color = mix(color, vec3(0.2), lensedArc * 0.38);
-    alpha = max(alpha, lensedArc * 0.38);
-    color = mix(color, vec3(0.035), massShell * 0.24 + lensingShade * 0.035);
-    alpha = max(alpha, massShell * 0.24 + lensingShade * 0.035);
-    color = mix(color, vec3(0.11), outerCircle * 0.065);
-    alpha = max(alpha, outerCircle * 0.065);
-    color = mix(color, paper, photonRing * 0.32 + rim * 0.68);
-    alpha = max(alpha, photonRing * 0.32 + rim * 0.68);
+    color = mix(color, vec3(0.17), lensedArc * 0.48);
+    alpha = max(alpha, lensedArc * 0.48);
+    color = mix(color, vec3(0.025), massShell * 0.32 + lensingShade * 0.055);
+    alpha = max(alpha, massShell * 0.32 + lensingShade * 0.055);
+    color = mix(color, vec3(0.11), outerCircle * 0.045);
+    alpha = max(alpha, outerCircle * 0.045);
+    color = mix(color, paper, softRim * 0.12 + photonRing * 0.26 + rim * 0.55);
+    alpha = max(alpha, softRim * 0.12 + photonRing * 0.26 + rim * 0.55);
     color = mix(color, ink, horizon);
     alpha = max(alpha, horizon);
     color = mix(color, vec3(0.055), innerRim);
     alpha = max(alpha, innerRim);
 
-    float frontStructure = clamp(density * 0.76 + flow * 0.24, 0.0, 1.0);
-    float frontAlpha = frontMatter * mix(0.62, 0.78, flow);
-    vec3 frontColor = mix(vec3(0.2), vec3(0.66), frontStructure);
+    float frontStructure = clamp(broadFlow * 0.5 + filamentFlow * 0.35 + fineFlow * 0.15, 0.0, 1.0);
+    float frontAlpha = frontMatter * mix(0.68, 0.88, filamentFlow);
+    vec3 frontColor = mix(vec3(0.14), vec3(0.68), frontStructure);
     color = mix(color, frontColor, frontAlpha);
     alpha = max(alpha, frontAlpha);
 

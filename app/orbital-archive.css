@@ -5954,8 +5954,8 @@ html[data-ascii-transition="active"] {
   }
 
   .gravity-black-hole {
-    left: 80%;
-    width: clamp(380px, min(28vw, 45svh), 500px);
+    left: 76.5%;
+    width: clamp(420px, min(31vw, 48svh), 540px);
   }
 
   .project-universe-layout {
